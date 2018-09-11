@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { Observable, of } from 'rxjs';
-import { catchError, map } from "rxjs/operators";
+import { catchError, map, tap } from "rxjs/operators";
 
 import { Dictionary } from "./dictionary";
 import { all } from 'q';
@@ -11,35 +11,26 @@ import { all } from 'q';
 })
 export class TranslatorService {
 
-  private dictionaries: {
-    gek: Dictionary,
-    korvax: Dictionary,
-    vykeen: Dictionary
-  }
+  private dictionaries: Array<Dictionary> = [];
 
-  constructor(
-    private http: HttpClient
-  ) {
-    for (let language in this.dictionaries) {
-      this.getDictionary(language)
-        .subscribe(d => this.dictionaries[language] = d);
-    }
-  }
+  constructor(private http: HttpClient) { }
 
   /**
-   * Attempts to load the dictionary for the named language.
+   * Attempts to load the dictionary for the named language, caching it if the load is successful.
    *
    * @private
-   * @param {string} language name of the language whose dictionary is to be loaded
-   * @returns {Observable<Dictionary>} an Observable for the loaded dictionary
+   * @param {string} language The name of the language whose dictionary is to be loaded.
+   * @returns {Observable<Dictionary>} An Observable of the loaded dictionary.
    * @memberof TranslatorService
    */
   private getDictionary(language: string): Observable<Dictionary> {
-    if (this.dictionaries && this.dictionaries[language]) {
-      return of(this.dictionaries[language]);
+    let dictionary = this.dictionaries.find(d => d.language === language);
+    if (dictionary) {
+      return of(dictionary);
     } else {
       return this.http.get<Dictionary>(`api/${language}`)
         .pipe(
+          tap(d => d && this.dictionaries.push(d)),
           catchError(this.handleError('getDictionary', { language: 'none', entries: [] }))
         );
     }
@@ -49,11 +40,11 @@ export class TranslatorService {
    * Splits a sentence in tokens.
    *
    * @private
-   * @param {string} sentence the sentence to be split
-   * @returns {string[]} the tokens which comprise the sentence
+   * @param {string} sentence The sentence to be split.
+   * @returns {Array<string>} A string array containing the tokens contained in the sentence.
    * @memberof TranslatorService
    */
-  private getTokens(sentence: string): string[] {
+  private getTokens(sentence: string): Array<string> {
     if (typeof sentence === 'string' && sentence.length > 0) {
       return sentence.match(/([a-zA-Z'\-]+|[^a-zA-Z\s]+|[\s]+)/g);
     } else {
@@ -65,7 +56,7 @@ export class TranslatorService {
    * Determines whether a token is a word.
    *
    * @private
-   * @param {string} token the token to be tested
+   * @param {string} token The token to be tested.
    * @returns {boolean} `true` if the token is a word; `false` otherwise.
    * @memberof TranslatorService
    */
@@ -81,8 +72,9 @@ export class TranslatorService {
    * Determines whether a token consists of sentence-ending punctuation.
    *
    * @private
-   * @param {string} token the token to be tested
-   * @returns {boolean} `true` if the token consists of sentence-ending punctuation; `false` otherwise.
+   * @param {string} token The token to be tested.
+   * @returns {boolean} `true` if the token consists of sentence-ending punctuation;
+   * `false` otherwise.
    * @memberof TranslatorService
    */
   private isEndOfSentence(token: string): boolean {
@@ -93,6 +85,15 @@ export class TranslatorService {
     }
   }
 
+  /**
+   * Translates a word from English to the target language, asynchronously.
+   * 
+   * @param {string} toLanguage The name of the target language.
+   * @param {string} word The word to be translated.
+   * @param {boolean} caps Whether to choose the capitalized or the common term.
+   * @returns {Observable<string>} An Observable of the translated word.
+   * @memberof TranslatorService
+   */
   translateEnglishWord(toLanguage: string, word: string, caps: boolean): Observable<string> {
     return this.getDictionary(toLanguage).pipe(map(dictionary => {
       let translation = word.toUpperCase();
@@ -112,27 +113,42 @@ export class TranslatorService {
     }));
   }
 
+  /**
+   * Translates a word from English to the target language, synchronously.
+   * 
+   * @param {string} toLanguage The name of the target language.
+   * @param {string} word The word to be translated.
+   * @param {boolean} caps Whether to choose the capitalized or the common term.
+   * @param {Dictionary} [dictionary] If provided, use this dictionary instead of the cached one.
+   * @returns {string} The translated word.
+   * @memberof TranslatorService
+   */
   translateWordFromEnglish(toLanguage: string, word: string, caps: boolean, dictionary?: Dictionary): string {
     let translation = word.toUpperCase();
 
-    // if (this.dictionaries[toLanguage]) {
-    //   let dictionary: Dictionary = this.dictionaries[toLanguage];
-      dictionary = dictionary || this.dictionaries[toLanguage];
+    dictionary = dictionary || this.dictionaries.find(d => d.language === toLanguage);
 
-      let entry = dictionary.entries.find(e => e.english.toLowerCase() == word.toLowerCase());
+    let entry = dictionary.entries.find(e => e.english.toLowerCase() == word.toLowerCase());
 
-      if (entry) {
-        if (caps && entry.capitalized.length > 0) {
-          translation = entry.capitalized;
-        } else {
-          translation = entry.common;
-        }
+    if (entry) {
+      if (caps && entry.capitalized.length > 0) {
+        translation = entry.capitalized;
+      } else {
+        translation = entry.common;
       }
-    // }
+    }
 
     return translation;
   }
 
+  /**
+   * Translate a word from a source language to English, asynchronously.
+   * 
+   * @param {string} fromLanguage The name of the source language.
+   * @param {string} word The word to be translated.
+   * @returns {Observable<string>} An Observable of the translated word.
+   * @memberof TranslatorService
+   */
   translateAlienWord(fromLanguage: string, word: string): Observable<string> {
     return this.getDictionary(fromLanguage).pipe(map(dictionary => {
       let translation = word.toUpperCase();
@@ -156,29 +172,43 @@ export class TranslatorService {
     }));
   }
 
+  /**
+   * Translate a word from a source language to English, synchronously.
+   * 
+   * @param {string} fromLanguage The name of the source language.
+   * @param {string} word The word to be translated.
+   * @param {Dictionary} [dictionary] If provided, use this dictionary instead of the cached one.
+   * @returns {string} The translated word.
+   * @memberof TranslatorService
+   */
   translateWordToEnglish(fromLanguage: string, word: string, dictionary?: Dictionary): string {
     let translation = word.toUpperCase();
 
-    // if (this.dictionaries[fromLanguage]) {
-      // let dictionary: Dictionary = this.dictionaries[fromLanguage];
-      dictionary = dictionary || this.dictionaries[fromLanguage];
+    dictionary = dictionary || this.dictionaries.find(d => d.language === fromLanguage);
 
-      let allCaps = dictionary.entries.find(e => e.allCaps.toLowerCase() == word.toLowerCase());
-      let capitalized = dictionary.entries.find(e => e.capitalized.toLowerCase() == word.toLowerCase());
-      let common = dictionary.entries.find(e => e.common.toLowerCase() == word.toLowerCase());
+    let allCaps = dictionary.entries.find(e => e.allCaps.toLowerCase() == word.toLowerCase());
+    let capitalized = dictionary.entries.find(e => e.capitalized.toLowerCase() == word.toLowerCase());
+    let common = dictionary.entries.find(e => e.common.toLowerCase() == word.toLowerCase());
 
-      if (allCaps) {
-        translation = allCaps.english;
-      } else if (capitalized) {
-        translation = capitalized.english.replace(/^./, c => c.toUpperCase());
-      } else if (common) {
-        translation = common.english;
-      }
-    // }
+    if (allCaps) {
+      translation = allCaps.english;
+    } else if (capitalized) {
+      translation = capitalized.english.replace(/^./, c => c.toUpperCase());
+    } else if (common) {
+      translation = common.english;
+    }
 
     return translation;
   }
 
+  /**
+   * Translates a sentence from English to the target language, asynchronously.
+   * 
+   * @param {string} toLanguage The name of the target language.
+   * @param {string} sentence The sentence to be translated.
+   * @returns {Observable<string>} An Observable of the translated sentence.
+   * @memberof TranslatorService
+   */
   translateEnglishSentence(toLanguage: string, sentence: string): Observable<string> {
     return this.getDictionary(toLanguage).pipe(map(dictionary => {
       let translation = '';
@@ -222,6 +252,15 @@ export class TranslatorService {
     }));
   }
 
+  /**
+   * Translates a sentence from English to the target language, synchronously.
+   * 
+   * @param {string} toLanguage The name of the target language.
+   * @param {string} sentence The sentence to be translated.
+   * @param {Dictionary} [dictionary] If provided, use this dictionary instead of the cached one.
+   * @returns {string} The translated sentence.
+   * @memberof TranslatorService
+   */
   translateSentenceFromEnglish(toLanguage: string, sentence: string, dictionary?: Dictionary): string {
     let translation = '';
     
@@ -263,6 +302,14 @@ export class TranslatorService {
     return translation;
   }
 
+  /**
+   * Translates a sentence from a source language to English, asynchronously.
+   * 
+   * @param {string} fromLanguage The name of the source language.
+   * @param {string} sentence The sentence to be translated.
+   * @returns {Observable<string>} An Observable of the translated sentence.
+   * @memberof TranslatorService
+   */
   translateAlienSentence(fromLanguage: string, sentence: string): Observable<string> {
     return this.getDictionary(fromLanguage).pipe(map(dictionary => {
       let translation = '';
@@ -289,6 +336,15 @@ export class TranslatorService {
     }))
   }
 
+  /**
+   * Translates a sentence from a source language to English, synchronously.
+   * 
+   * @param {string} fromLanguage The name of the source language.
+   * @param {string} sentence The sentence to be translated.
+   * @param {Dictionary} [dictionary] If provided, use this dictionary instead of the cached one.
+   * @returns The translated sentence.
+   * @memberof TranslatorService
+   */
   translateSentenceToEnglish(fromLanguage: string, sentence: string, dictionary?: Dictionary) {
     let translation = '';
 
@@ -313,10 +369,19 @@ export class TranslatorService {
     return translation;
   }
 
-  private handleError<T>(operation = 'operation', result?: T) {
+  /**
+   * Logs an error and returns an optional valid result to the caller.
+   * 
+   * @private
+   * @template T The type of the expected result.
+   * @param {string} [operation='operation'] The name of the operation.
+   * @param {T} [result] An optional valid result.
+   * @returns An Observable of the result.
+   * @memberof TranslatorService
+   */
+  private handleError<T>(operation: string = 'operation', result?: T) {
     return (error: any): Observable<T> => {
-      console.error(`${operation} failed with error ${error.status} (${error.statusText}):`);
-      console.error(error.message);
+      console.error(`${operation} failed with error ${error.status} (${error.statusText}): ${error.message}`);
       return of(result as T);
     }
   }
