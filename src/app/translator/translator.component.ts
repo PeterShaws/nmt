@@ -27,22 +27,39 @@ export class TranslatorComponent implements OnInit {
     private translatorService: TranslatorService
   ) { }
 
+  /**
+   * Updates the language boxes using the specified language as the source.
+   * 
+   * @param {string} fromLanguage the name of the source language
+   * 
+   * @memberOf TranslatorComponent
+   */
   update(fromLanguage: string): void {
-    switch (fromLanguage) {
-      case 'english':
+    if (this.sentences[fromLanguage].length == 0) {  // No need to translate an empty sentence
+      for (let toLanguage in this.sentences) {
+        this.sentences[toLanguage] = ''
+      }
+    } else {
+      if (fromLanguage === 'english') {
         for (let toLanguage in this.sentences) {
-          if (toLanguage == 'english') continue;
-          this.sentences[toLanguage] = this.translatorService.translateSentenceFromEnglish(toLanguage, this.sentences.english);
+          if (toLanguage !== 'english') {
+            this.translatorService.translateEnglishSentence(toLanguage, this.sentences.english)
+              .subscribe(translation => this.sentences[toLanguage] = translation);
+          }
         }
-        break;
-      default:
-        this.sentences.english = this.translatorService.translateSentenceToEnglish(fromLanguage, this.sentences[fromLanguage]);
-        for (let toLanguage in this.sentences) {
-          if (toLanguage == 'english' || toLanguage == fromLanguage) continue;
-          this.sentences[toLanguage] = this.translatorService.translateSentenceFromEnglish(toLanguage, this.sentences.english);
-        }
-        break;
-    };
+      } else {
+        this.translatorService.translateAlienSentence(fromLanguage, this.sentences[fromLanguage])
+          .subscribe(translation => {
+            this.sentences.english = translation;
+            for (let toLanguage in this.sentences) {
+              if (toLanguage !== 'english' && toLanguage !== fromLanguage) {
+                this.translatorService.translateEnglishSentence(toLanguage, translation)
+                  .subscribe(translation => this.sentences[toLanguage] = translation);
+              }
+            }
+          });
+      }
+    }
   }
 
   ngOnInit() {

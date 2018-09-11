@@ -1,19 +1,20 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from "@angular/common/http";
 import { Observable, of } from 'rxjs';
-import { catchError } from "rxjs/operators";
+import { catchError, map } from "rxjs/operators";
 
 import { Dictionary } from "./dictionary";
+import { all } from 'q';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TranslatorService {
 
-  private dictionaries = {
-    gek: <Dictionary> null,
-    korvax: <Dictionary> null,
-    vykeen: <Dictionary> null
+  private dictionaries: {
+    gek: Dictionary,
+    korvax: Dictionary,
+    vykeen: Dictionary
   }
 
   constructor(
@@ -34,10 +35,14 @@ export class TranslatorService {
    * @memberof TranslatorService
    */
   private getDictionary(language: string): Observable<Dictionary> {
-    return this.http.get<Dictionary>(`api/${language}`)
-      .pipe(
-        catchError(this.handleError('getDictionary', { language: 'none', entries: [] }))
-      );
+    if (this.dictionaries && this.dictionaries[language]) {
+      return of(this.dictionaries[language]);
+    } else {
+      return this.http.get<Dictionary>(`api/${language}`)
+        .pipe(
+          catchError(this.handleError('getDictionary', { language: 'none', entries: [] }))
+        );
+    }
   }
 
   /**
@@ -88,11 +93,32 @@ export class TranslatorService {
     }
   }
 
-  translateWordFromEnglish(toLanguage: string, word: string, caps: boolean): string {
+  translateEnglishWord(toLanguage: string, word: string, caps: boolean): Observable<string> {
+    return this.getDictionary(toLanguage).pipe(map(dictionary => {
+      let translation = word.toUpperCase();
+      let entry = dictionary.entries.find(e => e.english.toLowerCase() == word.toLowerCase());
+
+      if (entry) {
+        if (caps && entry.allCaps.length > 0) {
+          translation = entry.allCaps;
+        } else if (caps && entry.capitalized.length > 0) {
+          translation = entry.capitalized;
+        } else {
+          translation = entry.common;
+        }
+      }
+
+      return translation;
+    }));
+  }
+
+  translateWordFromEnglish(toLanguage: string, word: string, caps: boolean, dictionary?: Dictionary): string {
     let translation = word.toUpperCase();
 
-    if (this.dictionaries[toLanguage]) {
-      let dictionary: Dictionary = this.dictionaries[toLanguage];
+    // if (this.dictionaries[toLanguage]) {
+    //   let dictionary: Dictionary = this.dictionaries[toLanguage];
+      dictionary = dictionary || this.dictionaries[toLanguage];
+
       let entry = dictionary.entries.find(e => e.english.toLowerCase() == word.toLowerCase());
 
       if (entry) {
@@ -102,16 +128,41 @@ export class TranslatorService {
           translation = entry.common;
         }
       }
-    }
+    // }
 
     return translation;
   }
 
-  translateWordToEnglish(fromLanguage: string, word: string): string {
+  translateAlienWord(fromLanguage: string, word: string): Observable<string> {
+    return this.getDictionary(fromLanguage).pipe(map(dictionary => {
+      let translation = word.toUpperCase();
+
+      let allCaps = dictionary.entries.find(e => e.allCaps.toLowerCase() == word.toLowerCase());
+      if (allCaps) {
+        translation = allCaps.english;
+      } else {
+        let capitalized = dictionary.entries.find(e => e.capitalized.toLowerCase() == word.toLowerCase());
+        if (capitalized) {
+          translation = capitalized.english.replace(/^./, c => c.toUpperCase());
+        } else {
+          let common = dictionary.entries.find(e => e.common.toLowerCase() == word.toLowerCase());
+          if (common) {
+            translation = common.english;
+          }
+        }
+      }
+
+      return translation;
+    }));
+  }
+
+  translateWordToEnglish(fromLanguage: string, word: string, dictionary?: Dictionary): string {
     let translation = word.toUpperCase();
 
-    if (this.dictionaries[fromLanguage]) {
-      let dictionary: Dictionary = this.dictionaries[fromLanguage];
+    // if (this.dictionaries[fromLanguage]) {
+      // let dictionary: Dictionary = this.dictionaries[fromLanguage];
+      dictionary = dictionary || this.dictionaries[fromLanguage];
+
       let allCaps = dictionary.entries.find(e => e.allCaps.toLowerCase() == word.toLowerCase());
       let capitalized = dictionary.entries.find(e => e.capitalized.toLowerCase() == word.toLowerCase());
       let common = dictionary.entries.find(e => e.common.toLowerCase() == word.toLowerCase());
@@ -123,12 +174,55 @@ export class TranslatorService {
       } else if (common) {
         translation = common.english;
       }
-    }
+    // }
 
     return translation;
   }
 
-  translateSentenceFromEnglish(toLanguage: string, sentence: string): string {
+  translateEnglishSentence(toLanguage: string, sentence: string): Observable<string> {
+    return this.getDictionary(toLanguage).pipe(map(dictionary => {
+      let translation = '';
+      
+      let tokens = this.getTokens(sentence);
+      if (tokens.length > 0) {
+        let translated: string[] = [];
+        
+        for (let i = 0; i < tokens.length; i++) {
+          let token = tokens[i];
+          let translatedToken: string;
+          
+          if (this.isWord(token)) {
+            let caps = true;
+            
+            if (i > 0) {
+              let prevPunctuation: string[] = [];
+              
+              for (let j = i - 1; j >= 0 && (tokens[j].trim().length == 0 || this.isEndOfSentence(tokens[j])); j--) {
+                if (tokens[j].trim().length > 0) {
+                  prevPunctuation.push(tokens[j]);
+                }
+              }
+              
+              if (prevPunctuation.length == 0) {
+                caps = false;
+              }
+            }
+            
+            translatedToken = this.translateWordFromEnglish(toLanguage, token, caps, dictionary);
+          } else {
+            translatedToken = token;
+          }
+          translated.push(translatedToken);
+        }
+        
+        translation = translated.join('');
+      }
+      
+      return translation;
+    }));
+  }
+
+  translateSentenceFromEnglish(toLanguage: string, sentence: string, dictionary?: Dictionary): string {
     let translation = '';
     
     let tokens = this.getTokens(sentence);
@@ -156,7 +250,7 @@ export class TranslatorService {
             }
           }
   
-          translatedToken = this.translateWordFromEnglish(toLanguage, token, caps);
+          translatedToken = this.translateWordFromEnglish(toLanguage, token, caps, dictionary);
         } else {
           translatedToken = token;
         }
@@ -169,7 +263,33 @@ export class TranslatorService {
     return translation;
   }
 
-  translateSentenceToEnglish(fromLanguage: string, sentence: string) {
+  translateAlienSentence(fromLanguage: string, sentence: string): Observable<string> {
+    return this.getDictionary(fromLanguage).pipe(map(dictionary => {
+      let translation = '';
+
+      let tokens = this.getTokens(sentence);
+      if (tokens.length > 0) {
+        let translated: string[] = [];
+
+        for (let i = 0; i < tokens.length; i++) {
+          let token = tokens[i];
+          let translatedToken: string;
+          if (this.isWord(token)) {
+            translatedToken = this.translateWordToEnglish(fromLanguage, token, dictionary);
+          } else {
+            translatedToken = token;
+          }
+          translated.push(translatedToken);
+        }
+
+        translation = translated.join('');
+      }
+
+      return translation;
+    }))
+  }
+
+  translateSentenceToEnglish(fromLanguage: string, sentence: string, dictionary?: Dictionary) {
     let translation = '';
 
     let tokens = this.getTokens(sentence);
@@ -180,7 +300,7 @@ export class TranslatorService {
         let token = tokens[i];
         let translatedToken: string;
         if (this.isWord(token)) {
-          translatedToken = this.translateWordToEnglish(fromLanguage, token);
+          translatedToken = this.translateWordToEnglish(fromLanguage, token, dictionary);
         } else {
           translatedToken = token;
         }
