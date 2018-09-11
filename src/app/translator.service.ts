@@ -21,7 +21,6 @@ export class TranslatorService {
    * @private
    * @param {string} language The name of the language whose dictionary is to be loaded.
    * @returns {Observable<Dictionary>} An Observable of the loaded dictionary.
-   * @memberof TranslatorService
    */
   private getDictionary(language: string): Observable<Dictionary> {
     let dictionary = this.dictionaries.find(d => d.language === language);
@@ -42,7 +41,6 @@ export class TranslatorService {
    * @private
    * @param {string} sentence The sentence to be split.
    * @returns {Array<string>} A string array containing the tokens contained in the sentence.
-   * @memberof TranslatorService
    */
   private getTokens(sentence: string): Array<string> {
     if (typeof sentence === 'string' && sentence.length > 0) {
@@ -58,7 +56,6 @@ export class TranslatorService {
    * @private
    * @param {string} token The token to be tested.
    * @returns {boolean} `true` if the token is a word; `false` otherwise.
-   * @memberof TranslatorService
    */
   private isWord(token: string): boolean {
     if (typeof token === 'string' && token.length > 0) {
@@ -75,7 +72,6 @@ export class TranslatorService {
    * @param {string} token The token to be tested.
    * @returns {boolean} `true` if the token consists of sentence-ending punctuation;
    * `false` otherwise.
-   * @memberof TranslatorService
    */
   private isEndOfSentence(token: string): boolean {
     if (typeof token === 'string' && token.length > 0) {
@@ -92,7 +88,6 @@ export class TranslatorService {
    * @param {string} word The word to be translated.
    * @param {boolean} caps Whether to choose the capitalized or the common term.
    * @returns {Observable<string>} An Observable of the translated word.
-   * @memberof TranslatorService
    */
   translateEnglishWord(toLanguage: string, word: string, caps: boolean): Observable<string> {
     return this.getDictionary(toLanguage).pipe(map(dictionary => {
@@ -121,7 +116,6 @@ export class TranslatorService {
    * @param {boolean} caps Whether to choose the capitalized or the common term.
    * @param {Dictionary} [dictionary] If provided, use this dictionary instead of the cached one.
    * @returns {string} The translated word.
-   * @memberof TranslatorService
    */
   translateWordFromEnglish(toLanguage: string, word: string, caps: boolean, dictionary?: Dictionary): string {
     let translation = word.toUpperCase();
@@ -147,7 +141,6 @@ export class TranslatorService {
    * @param {string} fromLanguage The name of the source language.
    * @param {string} word The word to be translated.
    * @returns {Observable<string>} An Observable of the translated word.
-   * @memberof TranslatorService
    */
   translateAlienWord(fromLanguage: string, word: string): Observable<string> {
     return this.getDictionary(fromLanguage).pipe(map(dictionary => {
@@ -179,7 +172,6 @@ export class TranslatorService {
    * @param {string} word The word to be translated.
    * @param {Dictionary} [dictionary] If provided, use this dictionary instead of the cached one.
    * @returns {string} The translated word.
-   * @memberof TranslatorService
    */
   translateWordToEnglish(fromLanguage: string, word: string, dictionary?: Dictionary): string {
     let translation = word.toUpperCase();
@@ -207,7 +199,6 @@ export class TranslatorService {
    * @param {string} toLanguage The name of the target language.
    * @param {string} sentence The sentence to be translated.
    * @returns {Observable<string>} An Observable of the translated sentence.
-   * @memberof TranslatorService
    */
   translateEnglishSentence(toLanguage: string, sentence: string): Observable<string> {
     return this.getDictionary(toLanguage).pipe(map(dictionary => {
@@ -259,7 +250,6 @@ export class TranslatorService {
    * @param {string} sentence The sentence to be translated.
    * @param {Dictionary} [dictionary] If provided, use this dictionary instead of the cached one.
    * @returns {string} The translated sentence.
-   * @memberof TranslatorService
    */
   translateSentenceFromEnglish(toLanguage: string, sentence: string, dictionary?: Dictionary): string {
     let translation = '';
@@ -308,7 +298,6 @@ export class TranslatorService {
    * @param {string} fromLanguage The name of the source language.
    * @param {string} sentence The sentence to be translated.
    * @returns {Observable<string>} An Observable of the translated sentence.
-   * @memberof TranslatorService
    */
   translateAlienSentence(fromLanguage: string, sentence: string): Observable<string> {
     return this.getDictionary(fromLanguage).pipe(map(dictionary => {
@@ -343,7 +332,6 @@ export class TranslatorService {
    * @param {string} sentence The sentence to be translated.
    * @param {Dictionary} [dictionary] If provided, use this dictionary instead of the cached one.
    * @returns The translated sentence.
-   * @memberof TranslatorService
    */
   translateSentenceToEnglish(fromLanguage: string, sentence: string, dictionary?: Dictionary) {
     let translation = '';
@@ -377,7 +365,6 @@ export class TranslatorService {
    * @param {string} [operation='operation'] The name of the operation.
    * @param {T} [result] An optional valid result.
    * @returns An Observable of the result.
-   * @memberof TranslatorService
    */
   private handleError<T>(operation: string = 'operation', result?: T) {
     return (error: any): Observable<T> => {
