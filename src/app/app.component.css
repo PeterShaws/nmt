@@ -1,0 +1,32 @@
+/* AppComponent’s private CSS styles */
+h1 {
+    position: relative;
+    width: calc(75% - 40px);
+    margin: 100px 0 50px;
+    padding: var(--length-gutter) 0 var(--length-gutter) calc(25% + 40px);
+    text-align: left;
+    text-transform: uppercase;
+    font-weight: normal;
+    font-family: var(--font-family);
+    font-size: 32px;
+    letter-spacing: 2px;
+    background: rgb(0,0,0);
+    background: linear-gradient(90deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0.5) 12.5%, rgba(0,0,0,0.5) 25%, rgba(0,0,0,0.1) 100%); 
+    color: white;
+}
+h1::before {
+	content: '\25c6';
+	display: block;
+	position: absolute;
+	top: 6px;
+	left: 25%;
+}
+h1::after {
+	content: '\25cf';
+	display: block;
+	position: absolute;
+	top: 16.5px;
+	left: calc(25% + 7.5px);
+	color: #222222;
+	font-size: 66%;
+}
