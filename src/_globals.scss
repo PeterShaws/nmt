@@ -1,3 +1,17 @@
 $length-gutter: 12px;
 $length-corner-radius: 2px;
 $font-stack: GeoNMS, Arial, Helvetica, sans-serif;
+
+@mixin respond-to($name) {
+    @if $name == small-screen {
+        @media only screen and (max-width: 768px) {
+            @content;
+        }
+    }
+
+    @if $name == medium-screen {
+        @media only screen and (min-width: 769px) and (max-width: 1024px) {
+            @content;
+        }
+    }
+}
