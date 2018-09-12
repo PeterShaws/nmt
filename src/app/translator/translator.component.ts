@@ -31,8 +31,6 @@ export class TranslatorComponent implements OnInit {
    * Updates the language boxes using the specified language as the source.
    * 
    * @param {string} fromLanguage the name of the source language
-   * 
-   * @memberOf TranslatorComponent
    */
   update(fromLanguage: string): void {
     if (this.sentences[fromLanguage].length == 0) {  // No need to translate an empty sentence
@@ -43,17 +41,17 @@ export class TranslatorComponent implements OnInit {
       if (fromLanguage === 'english') {
         for (let toLanguage in this.sentences) {
           if (toLanguage !== 'english') {
-            this.translatorService.translateEnglishSentence(toLanguage, this.sentences.english)
+            this.translatorService.translateEnglishSentence$(toLanguage, this.sentences.english)
               .subscribe(translation => this.sentences[toLanguage] = translation);
           }
         }
       } else {
-        this.translatorService.translateAlienSentence(fromLanguage, this.sentences[fromLanguage])
+        this.translatorService.translateAlienSentence$(fromLanguage, this.sentences[fromLanguage])
           .subscribe(translation => {
             this.sentences.english = translation;
             for (let toLanguage in this.sentences) {
               if (toLanguage !== 'english' && toLanguage !== fromLanguage) {
-                this.translatorService.translateEnglishSentence(toLanguage, translation)
+                this.translatorService.translateEnglishSentence$(toLanguage, translation)
                   .subscribe(translation => this.sentences[toLanguage] = translation);
               }
             }
