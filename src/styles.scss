@@ -1,0 +1,27 @@
+/* You can add global styles to this file, and also import other style files */
+@font-face {
+    font-family: 'GeoNMS';
+    src: url('./assets/geonms.ttf') format('truetype');
+    font-style: normal;
+    font-weight: 300;
+}
+
+html {
+    height: calc(100% - 150px);
+}
+body {
+    height: 100%;
+    margin: 0;
+    background: {
+        color: #bcc5ce;
+        image: radial-gradient(
+            circle at 75% 75%,
+            #bcc5ce 0%,
+            #667a92 45%,
+            #0b1723 90%,
+            #3b4858 100%);
+        repeat: no-repeat;
+        attachment: fixed;
+    }
+    color: brown;
+}
