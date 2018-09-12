@@ -9,7 +9,6 @@ import { TranslatorService } from '../translator.service';
 })
 export class TranslatorComponent implements OnInit {
 
-  private title = 'No Man’s Translator';
   private languages = {
     english: {
       label: 'English',
@@ -28,7 +27,8 @@ export class TranslatorComponent implements OnInit {
       sentence: ''
     }
   }
-  private languageNames: string[] = Object.keys(this.languages);
+  languageNames: string[] = Object.keys(this.languages);
+  title = 'No Man’s Translator';
 
   constructor(
     private translatorService: TranslatorService
