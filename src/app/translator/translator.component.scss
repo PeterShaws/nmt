@@ -4,14 +4,16 @@
 #translators {
     width: 100%;
     margin: 0;
-    padding: 0;
+    padding: 0 {
+        bottom: 24px + $length-gutter;
+    }
     display: flex;
     flex-flow: row wrap;
     align-content: center;
     align-items: flex-start;
     justify-content: center;
     justify-items: center;
-    
+
     .language {
         width: 50%;
         margin: 0 $length-gutter;
@@ -61,6 +63,7 @@
             text-align: center;
             border: none {
                 bottom: 3px solid #46545f;
+                radius: 0;
             }
             box-shadow: inset 3px 0 0 0 white;
             background-color: rgba(0, 0, 0, 0.85);
