@@ -1,7 +1,11 @@
-<div *ngFor="let language of languages" class="language">
-  <div class="name">{{labels[language]}}</div>
+<h1>
+  <div class="logo"></div>
+  {{title}}
+</h1>
+<div *ngFor="let language of languageNames" class="language">
+  <div class="name">{{languages[language].label}}</div>
   <textarea class="{{language}}"
-    placeholder="Enter {{labels[language]}} sentence to translate"
-    [(ngModel)]="sentences[language]" (input)="update(language)"
+    placeholder="Enter {{languages[language].label}} sentence to translate"
+    [(ngModel)]="languages[language].sentence" (input)="update(language)"
     autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
 </div>
