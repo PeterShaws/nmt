@@ -41,7 +41,7 @@ export class TranslatorService {
    *
    * @private
    * @param {string} sentence The sentence to be split.
-   * @returns {Array<string>} A string array containing the tokens contained in the sentence.
+   * @returns {Array<string>} A string array of the tokens contained in the sentence.
    */
   private getTokens(sentence: string): Array<string> {
     if (sentence.length > 0) {
