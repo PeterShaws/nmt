@@ -5,9 +5,10 @@
 <div id="translators">
   <div *ngFor="let language of languageNames" class="language {{language}}">
     <div class="name">{{languages[language].label}}</div>
-    <textarea class="{{language}}"
+    <textarea #textArea
+      id="text-area-{{language}}" class="{{language}}" [attr.data-language]="language"
       placeholder="Enter {{languages[language].label}} sentence to translate"
-      [(ngModel)]="languages[language].sentence" (input)="update(language)"
+      [(ngModel)]="languages[language].sentence" (input)="update(textArea)"
       autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
   </div>
 </div>

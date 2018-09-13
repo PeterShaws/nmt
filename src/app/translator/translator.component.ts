@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, AfterViewInit } from '@angular/core';
 
 import { TranslatorService } from '../translator.service';
 
@@ -7,7 +7,7 @@ import { TranslatorService } from '../translator.service';
   templateUrl: './translator.component.html',
   styleUrls: ['./translator.component.scss']
 })
-export class TranslatorComponent implements OnInit {
+export class TranslatorComponent implements AfterViewInit {
 
   private languages = {
     english: {
@@ -22,19 +22,19 @@ export class TranslatorComponent implements OnInit {
   languageNames: string[] = Object.keys(this.languages);
   title = 'No Man’s Translator';
 
-  constructor(
-    private translatorService: TranslatorService
-  ) { }
+  constructor(private translatorService: TranslatorService) { }
 
   /**
-   * Updates the language boxes using the specified language as the source.
+   * Updates the language boxes using the specified textarea as the source for the translation.
    * 
-   * @param {string} fromLanguage the name of the source language
+   * @param {HTMLTextAreaElement} textArea The textarea to be used as the translation source.
    */
-  update(fromLanguage: string): void {
+  update(textArea: HTMLTextAreaElement): void {
+    let fromLanguage = textArea.dataset.language;
+
     if (this.languages[fromLanguage].sentence.length == 0) {  // No need to translate an empty sentence
       for (let toLanguage in this.languages) {
-        this.languages[toLanguage].sentence = ''
+        this.languages[toLanguage].sentence = '';
       }
     } else {
       if (fromLanguage === 'english') {
@@ -59,8 +59,8 @@ export class TranslatorComponent implements OnInit {
     }
   }
 
-  ngOnInit() {
-    this.update('english');
+  ngAfterViewInit() {
+    this.update(document.getElementById('text-area-english') as HTMLTextAreaElement);
   }
 
 }
