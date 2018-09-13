@@ -31,11 +31,11 @@ body {
 
 h1 {
     position: relative;
-    width: 75%;
-    margin: 100px 0 50px;
-    padding: $length-gutter 0 $length-gutter 25%;
+    width: 100%;
+    margin: 0 0 $length-gutter;
+    padding: $length-gutter 0;
     text: {
-        align: left;
+        align: center;
         transform: uppercase;
     }
     font: {
