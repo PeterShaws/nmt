@@ -37,15 +37,16 @@ export class TranslatorService {
   }
 
   /**
-   * Splits a sentence in tokens.
+   * Splits a sentence in tokens, removing any brackets from previous failed translations.
    *
    * @private
    * @param {string} sentence The sentence to be split.
-   * @returns {Array<string>} A string array of the tokens contained in the sentence.
+   * @returns {Array<string>} A string array of the tokens contained in the sentence, minus any
+   * square brackets.
    */
   private getTokens(sentence: string): Array<string> {
     if (sentence.length > 0) {
-      return sentence.match(/([a-zA-Z'\-]+|[^a-zA-Z\s]+|[\s]+)/g);
+      return sentence.match(/([a-zA-Z'\-]+|[^a-zA-Z\[\]\s]+|[\s]+)/g);
     } else {
       return [];
     }
