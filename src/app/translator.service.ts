@@ -144,6 +144,8 @@ export class TranslatorService {
     if (entry) {
       if (this.isAllCaps(word) && entry.allCaps.length > 0) {
         translation = entry.allCaps.toUpperCase();
+      } else if (this.isAllCaps(word) && entry.capitalized.length > 0) {
+        translation = entry.capitalized.toUpperCase();
       } else if ((this.isCapitalized(word) || caps) && entry.capitalized.length > 0) {
         translation = entry.capitalized;
       } else {
