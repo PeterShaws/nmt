@@ -232,17 +232,9 @@ export class TranslatorService {
           let caps = true;
   
           if (i > 0) {
-            let prevPunctuation: string[] = [];
-  
-            for (let j = i - 1; j >= 0 && (tokens[j].trim().length == 0 || this.isEndOfSentence(tokens[j])); j--) {
-              if (tokens[j].trim().length > 0) {
-                prevPunctuation.push(tokens[j]);
-              }
-            }
-
-            if (prevPunctuation.length == 0) {
-              caps = false;
-            }
+            let soFar = tokens.slice(0, i).reverse();
+            let lastNonBlank = soFar.findIndex(t => t.trim().length > 0);
+            if (lastNonBlank > 0 && !this.isEndOfSentence(soFar[lastNonBlank])) caps = false;
           }
   
           translatedToken = this.translateEnglishWord(token, caps, dictionary);
