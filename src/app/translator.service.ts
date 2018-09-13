@@ -67,6 +67,38 @@ export class TranslatorService {
   }
 
   /**
+   * Determines whether a word token has all its letters in uppercase.
+   * 
+   * @private
+   * @param {string} token The token to be tested.
+   * @returns {boolean} `true` if the token is a word and all of its letters are in uppercase;
+   * `false` otherwise.
+   */
+  private isAllCaps(token: string): boolean {
+    if (token.length > 0 && this.isWord(token)) {
+      return token === token.toUpperCase();
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   * Determines whether a word token is capitalized.
+   * 
+   * @private
+   * @param {string} token The token to be tested.
+   * @returns {boolean} `true` if the token is a word and consists of a capital letter followed by
+   * zero or more lower case letters; `false` otherwise.
+   */
+  private isCapitalized(token: string): boolean {
+    if (token.length > 0 && this.isWord(token)) {
+      return !!token.trim().match(/^[A-Z][a-z\-']*$/);
+    } else {
+      return false;
+    }
+  }
+
+  /**
    * Determines whether a token consists of sentence-ending punctuation.
    *
    * @private
@@ -97,7 +129,7 @@ export class TranslatorService {
   }
 
   /**
-   * Translates a word from English to the language of the provided dictionary.
+   * Translates a word from English to the language of the provided dictionary, synchronously.
    * 
    * @param {string} word The word to be translated.
    * @param {boolean} caps Whether to choose the capitalized or the common term.
@@ -105,13 +137,13 @@ export class TranslatorService {
    * @returns {string} The translated word.
    */
   translateEnglishWord(word: string, caps: boolean, dictionary: Dictionary): string {
-    let translation = word.toUpperCase();
+    let translation = `[${word.replace(/[\[\]]/g, '')}]`;
     
     let entry = dictionary.entries.find(e => e.english.toLowerCase() == word.toLowerCase());
     if (entry) {
-      if (caps && entry.allCaps.length > 0) {
-        translation = entry.allCaps;
-      } else if (caps && entry.capitalized.length > 0) {
+      if (this.isAllCaps(word) && entry.allCaps.length > 0) {
+        translation = entry.allCaps.toUpperCase();
+      } else if ((this.isCapitalized(word) || caps) && entry.capitalized.length > 0) {
         translation = entry.capitalized;
       } else {
         translation = entry.common;
@@ -142,17 +174,17 @@ export class TranslatorService {
    * @returns {string} The translated word.
    */
   translateAlienWord(word: string, dictionary: Dictionary): string {
-    let translation = word.toUpperCase();
+    let translation = `[${word.replace(/[\[\]]/g, '')}]`;
 
-    let allCaps = dictionary.entries.find(e => e.allCaps.toLowerCase() == word.toLowerCase());
+    let allCaps = dictionary.entries.find(e => e.allCaps == word);
     if (allCaps) {
-      translation = allCaps.english;
+      translation = allCaps.english.toUpperCase();
     } else {
-      let capitalized = dictionary.entries.find(e => e.capitalized.toLowerCase() == word.toLowerCase());
+      let capitalized = dictionary.entries.find(e => e.capitalized == word);
       if (capitalized) {
         translation = capitalized.english.replace(/^./, c => c.toUpperCase());
       } else {
-        let common = dictionary.entries.find(e => e.common.toLowerCase() == word.toLowerCase());
+        let common = dictionary.entries.find(e => e.common == word);
         if (common) {
           translation = common.english;
         }
