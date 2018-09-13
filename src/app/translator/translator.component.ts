@@ -12,20 +12,12 @@ export class TranslatorComponent implements OnInit {
   private languages = {
     english: {
       label: 'English',
-      sentence: 'How are you, traveller? Good, good! Great starship, the one you have there. Will we trade? No units required, the starship will be all. Now help me here!'
+      sentence: 'There. You will have this gift. We must grant it to you, for it is a knowledge you cannot escape. Now follow the truth, and be our eyes. You will leave us here and seek to know what is real: such is your reward.'
     },
-    gek: {
-      label: 'Gek',
-      sentence: ''
-    },
-    korvax: {
-      label: 'Korvax',
-      sentence: ''
-    },
-    vykeen: {
-      label: 'Vy’keen',
-      sentence: ''
-    }
+    gek:    { label: 'Gek',     sentence: '' },
+    korvax: { label: 'Korvax',  sentence: '' },
+    vykeen: { label: 'Vy’keen', sentence: '' },
+    atlas:  { label: 'Atlas',   sentence: '' }
   }
   languageNames: string[] = Object.keys(this.languages);
   title = 'No Man’s Translator';
