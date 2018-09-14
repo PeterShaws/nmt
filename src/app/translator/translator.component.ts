@@ -23,7 +23,7 @@ export class TranslatorComponent implements AfterViewInit {
     atlas:   { label: 'Atlas',   sentence: '' }
   };
   languageNames: string[] = Object.keys(this.languages);
-  title = 'No Man’s Translator';
+  title = 'Translator';
 
   constructor(private translatorService: TranslatorService) { }
 
