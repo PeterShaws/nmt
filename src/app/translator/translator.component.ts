@@ -9,15 +9,18 @@ import { TranslatorService } from '../translator.service';
 })
 export class TranslatorComponent implements AfterViewInit {
 
+  private defaultSentence = [
+    'There. You will have this gift.',
+    'We must grant it to you, for it is a knowledge you cannot escape.',
+    'Now follow the truth, and be our eyes.',
+    'You will leave us here and seek to know what is real: such is your reward.'
+  ].join(' ');
   private languages = {
-    english: {
-      label: 'English',
-      sentence: 'There. You will have this gift. We must grant it to you, for it is a knowledge you cannot escape. Now follow the truth, and be our eyes. You will leave us here and seek to know what is real: such is your reward.'
-    },
-    gek:    { label: 'Gek',     sentence: '' },
-    korvax: { label: 'Korvax',  sentence: '' },
-    vykeen: { label: 'Vy’keen', sentence: '' },
-    atlas:  { label: 'Atlas',   sentence: '' }
+    english: { label: 'English', sentence: this.defaultSentence },
+    gek:     { label: 'Gek',     sentence: '' },
+    korvax:  { label: 'Korvax',  sentence: '' },
+    vykeen:  { label: 'Vy’keen', sentence: '' },
+    atlas:   { label: 'Atlas',   sentence: '' }
   }
   languageNames: string[] = Object.keys(this.languages);
   title = 'No Man’s Translator';
