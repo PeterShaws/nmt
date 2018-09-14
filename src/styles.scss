@@ -9,6 +9,12 @@
     font-weight: 300;
 }
 
+*, *::before, *::after {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
 html {
     height: calc(100% - 150px);
 }
@@ -72,7 +78,7 @@ h1 {
         $circle-size: 2 * $logo-size / 3;
         display: inline-block;
         position: relative;
-        top: -$circle-size; // was -11px, testing -10px to see how it looks
+        top: -$circle-size;
         width: 0;
         height: 0;
         border: $logo-size solid transparent {

@@ -3,7 +3,6 @@
 @import '../globals';
 
 #footer {
-    @include box-sizing;
     position: fixed;
     bottom: 0;
     left: 0;
