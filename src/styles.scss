@@ -35,7 +35,7 @@ body {
     }
 }
 
-h1 {
+h2.component {
     position: relative;
     width: 100%;
     margin: 0 0 $length-gutter;
@@ -85,9 +85,9 @@ h1 {
             bottom-color: currentColor;
         };
 
-        @include respond-to(small-screen) {
-            display: none;
-        }
+        // @include respond-to(small-screen) {
+        //     display: none;
+        // }
 
         &::before {
             content: '';
