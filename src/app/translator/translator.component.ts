@@ -21,7 +21,7 @@ export class TranslatorComponent implements AfterViewInit {
     korvax:  { label: 'Korvax',  sentence: '' },
     vykeen:  { label: 'Vy’keen', sentence: '' },
     atlas:   { label: 'Atlas',   sentence: '' }
-  }
+  };
   languageNames: string[] = Object.keys(this.languages);
   title = 'No Man’s Translator';
 
@@ -29,19 +29,21 @@ export class TranslatorComponent implements AfterViewInit {
 
   /**
    * Updates the language boxes using the specified textarea as the source for the translation.
-   * 
+   *
    * @param {HTMLTextAreaElement} textArea The textarea to be used as the translation source.
    */
   update(textArea: HTMLTextAreaElement): void {
-    let fromLanguage = textArea.dataset.language;
+    const fromLanguage = textArea.dataset.language;
 
-    if (this.languages[fromLanguage].sentence.length == 0) {  // No need to translate an empty sentence
-      for (let toLanguage in this.languages) {
-        this.languages[toLanguage].sentence = '';
+    if (this.languages[fromLanguage].sentence.length === 0) {  // No need to translate an empty sentence
+      for (const toLanguage in this.languages) {
+        if (this.languages.hasOwnProperty(toLanguage)) {
+          this.languages[toLanguage].sentence = '';
+        }
       }
     } else {
       if (fromLanguage === 'english') {
-        for (let toLanguage in this.languages) {
+        for (const toLanguage in this.languages) {
           if (toLanguage !== 'english') {
             this.translatorService.translateEnglishSentence$(toLanguage, this.languages.english.sentence)
               .subscribe(alienTranslation => this.languages[toLanguage].sentence = alienTranslation);
@@ -51,7 +53,7 @@ export class TranslatorComponent implements AfterViewInit {
         this.translatorService.translateAlienSentence$(fromLanguage, this.languages[fromLanguage].sentence)
           .subscribe(englishTranslation => {
             this.languages.english.sentence = englishTranslation;
-            for (let toLanguage in this.languages) {
+            for (const toLanguage in this.languages) {
               if (toLanguage !== 'english' && toLanguage !== fromLanguage) {
                 this.translatorService.translateEnglishSentence$(toLanguage, englishTranslation)
                   .subscribe(alienTranslation => this.languages[toLanguage].sentence = alienTranslation);
