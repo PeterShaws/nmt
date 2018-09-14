@@ -144,7 +144,7 @@ export class TranslatorService {
     if (entry) {
       if (this.isAllCaps(word)) {
         if (entry.allCaps.length > 0) {
-        translation = entry.allCaps.toUpperCase();
+          translation = entry.allCaps.toUpperCase();
         } else if (entry.capitalized.length > 0) {
           translation = entry.capitalized.toUpperCase();
         } else {
@@ -152,8 +152,8 @@ export class TranslatorService {
         }
       } else if (this.isCapitalized(word) || caps) {
         if (entry.capitalized.length > 0) {
-        translation = entry.capitalized;
-      } else {
+          translation = entry.capitalized;
+        } else {
           translation = entry.common.replace(/^./, c => c.toUpperCase());
         }
       } else {
@@ -240,24 +240,9 @@ export class TranslatorService {
           let caps = true;
 
           if (i > 0) {
-            // tslint:disable-next-line:comment-format
-            //*/
             const soFar = tokens.slice(0, i).reverse();
             const lastNonBlank = soFar.findIndex(t => t.trim().length > 0);
             if (lastNonBlank > 0 && !this.isEndOfSentence(soFar[lastNonBlank])) { caps = false; }
-            /*/
-            let prevPunctuation: string[] = [];
-
-            for (let j = i - 1; j >= 0 && (tokens[j].trim().length == 0 || this.isEndOfSentence(tokens[j])); j--) {
-              if (tokens[j].trim().length > 0) {
-                prevPunctuation.push(tokens[j]);
-              }
-            }
-
-            if (prevPunctuation.length == 0) {
-              caps = false;
-            }
-            //*/
           }
 
           translatedToken = this.translateEnglishWord(token, caps, dictionary);
