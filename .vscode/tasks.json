@@ -1,0 +1,48 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build-prod",
+            "type": "shell",
+            "command": "ng",
+            "args": [
+                "build",
+                "--prod",
+                "--build-optimizer",
+                "--base-href=\"https://PeterShaws.github.io/nmt/\""
+            ],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            }
+        },
+        {
+            "label": "publish-ghpages",
+            "type": "shell",
+            "command": "ngh",
+            "args": [
+                "--dir=\"dist/nmt\"",
+                "--message=\"Automated deploy\""
+            ],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "dependsOn": [ "build-prod" ]
+        }
+    ]
+}
