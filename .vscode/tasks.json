@@ -4,7 +4,7 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "Production Build",
+            "label": "build-prod",
             "type": "shell",
             "command": "ng",
             "args": [
@@ -13,41 +13,25 @@
                 "--build-optimizer",
                 "--base-href=\"https://PeterShaws.github.io/nmt/\""
             ],
-            "options": {
-                "cwd": "${workspaceFolder}"
-            },
             "presentation": {
                 "echo": true,
                 "reveal": "always",
                 "focus": false,
                 "panel": "shared",
                 "showReuseMessage": true
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
             }
         },
         {
-            "label": "Publish to GitHub Pages",
+            "label": "publish-ghpages",
             "type": "shell",
             "command": "ngh",
-            "args": [ "--dir=\"dist/nmt\"" ],
-            "options": {
-                "cwd": "${workspaceFolder}"
-            },
-            "presentation": {
-                "echo": true,
-                "reveal": "always",
-                "focus": false,
-                "panel": "shared",
-                "showReuseMessage": true
-            }
-        },
-        {
-            "label": "Publish latest version",
-            "type": "shell",
-            "command": "ngh",
-            "args": [ "--dir=\"dist/nmt\"" ],
-            "options": {
-                "cwd": "${workspaceFolder}"
-            },
+            "args": [
+                "--dir=\"dist/nmt\"",
+                "--message=\"Automated deploy\""
+            ],
             "presentation": {
                 "echo": true,
                 "reveal": "always",
@@ -55,7 +39,10 @@
                 "panel": "shared",
                 "showReuseMessage": true
             },
-            "dependsOn": [ "Production Build" ]
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "dependsOn": [ "build-prod" ]
         }
     ]
 }

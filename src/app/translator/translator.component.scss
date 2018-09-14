@@ -2,7 +2,6 @@
 @import '../../globals';
 
 #translators {
-    @include box-sizing;
     width: 100%;
     margin: 0;
     padding: 0 $length-gutter (26px + $length-gutter);
@@ -62,8 +61,8 @@
     
         textarea {
             display: block;
-            width: calc(100% - 4 * #{$length-gutter});
-            min-height: 100px;
+            width: 100%;
+            height: 125px;
             resize: none;
             overflow-x: hidden;
             overflow-y: auto;
@@ -84,12 +83,8 @@
             color: gainsboro;
 
             @include respond-to(small-screen) {
-                min-height: 100px;
                 font-size: 18px;
                 box-shadow: none;
-            }
-            @include respond-to(medium-screen) {
-                min-height: 125px;
             }
     
             &.gek    { color: yellowgreen; }

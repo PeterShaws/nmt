@@ -1,4 +1,15 @@
-<app-translator></app-translator>
+<div id="header">
+    <div class="title">
+        <h1>{{title}}</h1>
+        <h2>{{currentPath}}</h2>
+    </div>
+    <nav>
+        <a routerLink="/translator" routerLinkActive="active">Translator</a>
+        <a routerLink="/portals" routerLinkActive="active">Portals</a>
+        <a routerLink="/exploration" routerLinkActive="active">Exploration</a>
+    </nav>
+</div>
+<router-outlet></router-outlet>
 <div id="footer">
-    <a href="https://www.reddit.com/message/compose/?to=agnoristos">Created by Peter Shaws aka u/agnoristos</a>
+    <a href="{{footerLink}}">{{footerMessage}}</a>
 </div>
