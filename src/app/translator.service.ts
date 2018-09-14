@@ -142,10 +142,20 @@ export class TranslatorService {
 
     const entry = dictionary.entries.find(e => e.english.toLowerCase() === word.toLowerCase());
     if (entry) {
-      if (this.isAllCaps(word) && entry.allCaps.length > 0) {
+      if (this.isAllCaps(word)) {
+        if (entry.allCaps.length > 0) {
         translation = entry.allCaps.toUpperCase();
-      } else if ((this.isCapitalized(word) || caps) && entry.capitalized.length > 0) {
+        } else if (entry.capitalized.length > 0) {
+          translation = entry.capitalized.toUpperCase();
+        } else {
+          translation = entry.common.toUpperCase();
+        }
+      } else if (this.isCapitalized(word) || caps) {
+        if (entry.capitalized.length > 0) {
         translation = entry.capitalized;
+      } else {
+          translation = entry.common.replace(/^./, c => c.toUpperCase());
+        }
       } else {
         translation = entry.common;
       }
