@@ -8,11 +8,13 @@ import { AppComponent } from './app.component';
 import { TranslatorComponent } from './translator/translator.component';
 import { InMemoryDataService } from './in-memory-data.service';
 import { AppRoutingModule } from './/app-routing.module';
+import { CoordinatesComponent } from './coordinates/coordinates.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    TranslatorComponent
+    TranslatorComponent,
+    CoordinatesComponent
   ],
   imports: [
     BrowserModule,

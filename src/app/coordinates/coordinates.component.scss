@@ -1,0 +1,32 @@
+// CoordinateComponent's private SCSS styles
+
+@import '../../globals';
+
+#coordinates {
+    display: flex;
+    flex-flow: column nowrap;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    justify-items: center;
+    height: calc(100% - 60px);
+
+    label {
+        @extend %input-label;
+    }
+
+    input[type=text] {
+        @extend %input-box;
+        width: 50%;
+        height: 50px;
+        margin: $length-gutter;
+        font-size: 40px;
+    }
+    
+    #portal-glyphs {
+        width: 50%;
+        height: 50px;
+        margin: $length-gutter;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+}
