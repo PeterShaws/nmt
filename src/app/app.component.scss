@@ -89,13 +89,14 @@
             outline: none;
             transition: all .25s ease;
 
-            &:hover,
-            &.active {
+            &:hover {
                 font-size: 22px;
                 padding-top: 20px;
             }
 
             &.active {
+                font-size: 24px;
+                padding-top: 18px;
                 opacity: 1;
             }
 
