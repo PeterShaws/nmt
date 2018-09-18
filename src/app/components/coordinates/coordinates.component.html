@@ -1,12 +1,18 @@
 <div id="coordinates">
-  <label for="galactic-address">Galactic Address</label>
-  <input type="text" maxlength="19"
-    name="galactic-address" id="galactic-address"
-    [(ngModel)]="address" (ngModelChange)="onChangeAddress($event)">
-  <label for="portal-address">Portal Address</label>
-  <input type="text" maxlength="12"
-    name="portal-address" id="portal-address"
-    [(ngModel)]="glyphs" (ngModelChange)="onChangeGlyphs($event)">
-  <label for="portal-glyphs">Portal Glyphs</label>
+  <div class="group">
+    <label for="galactic-address">Galactic Address</label>
+    <input type="text" id="galactic-address"
+      maxlength="19" appGalacticAddress
+      [(ngModel)]="address" name="galactic-address"
+      #gAddress="ngModel" (input)="onInputAddress(gAddress.value, gAddress.valid)">
+  </div>
+  <div class="group">
+    <label for="portal-address">Portal Address</label>
+    <input type="text" maxlength="12"
+      name="portal-address" id="portal-address"
+      [(ngModel)]="glyphs" name="portal-address"
+      #pAddress="ngModel">
+    <label for="portal-glyphs">Portal Glyphs</label>
+  </div>
   <div id="portal-glyphs"></div>
 </div>

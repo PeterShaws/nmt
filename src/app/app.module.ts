@@ -9,12 +9,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { InMemoryDataService } from './services/in-memory-data.service';
 import { TranslatorComponent } from './components/translator/translator.component';
 import { CoordinatesComponent } from './components/coordinates/coordinates.component';
+import { GalacticAddressDirective } from './directives/galactic-address.directive';
 
 @NgModule({
   declarations: [
     AppComponent,
     TranslatorComponent,
-    CoordinatesComponent
+    CoordinatesComponent,
+    GalacticAddressDirective
   ],
   imports: [
     BrowserModule,
