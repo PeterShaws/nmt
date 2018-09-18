@@ -24,7 +24,7 @@
         letter-spacing: 4px;
     }
 
-    .status {
+    .status.invalid {
         width: 50%;
         margin-top: -$length-gutter;
         text-align: center;
@@ -33,12 +33,8 @@
             size: 14px;
         }
         letter-spacing: 2px;
-        background-color: seagreen;
+        background-color: brown;
         color: white;
-
-        &.invalid {
-            background-color: brown;
-        }
 
         div {
             display: inline-block;

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CoordinatesService } from '../../services/coordinates.service';
 
 @Component({
@@ -6,19 +6,30 @@ import { CoordinatesService } from '../../services/coordinates.service';
   templateUrl: './coordinates.component.html',
   styleUrls: ['./coordinates.component.scss']
 })
-export class CoordinatesComponent implements OnInit {
+export class CoordinatesComponent {
 
   address: string;
   glyphs: string;
+  planet: string;
 
   constructor(private coordinatesService: CoordinatesService) {
     this.address = '';
     this.glyphs = '';
+    this.planet = '';
   }
 
-  onInputGalacticAddress(newAddress: string, valid: boolean): void {
-    if (valid) {
-      this.glyphs = this.coordinatesService.convertGalacticAddress(newAddress);
+  onInputGalacticAddress(
+    newAddress: string,
+    validAddress: boolean,
+    newDestination: string,
+    validDestination: boolean
+  ): void {
+    if (validAddress) {
+      this.glyphs = this.coordinatesService.convertGalacticAddress(
+        newAddress,
+        validDestination ? newDestination : undefined
+      );
+      this.planet = this.glyphs.slice(0, 1);
     } else {
       this.glyphs = '';
     }
@@ -27,14 +38,17 @@ export class CoordinatesComponent implements OnInit {
   onInputPortalAddress(newAddress: string, valid: boolean): void {
     if (valid) {
       this.address = this.coordinatesService.convertPortalAddress(newAddress);
+      this.planet = newAddress.slice(0, 1);
     } else {
       this.address = '';
     }
   }
 
-  ngOnInit() {
+  onInputPlanetDestination(newPlanet: string, validPlanet: boolean, allValid: boolean): void {
+    if (!validPlanet) { this.planet = newPlanet = '0'; }
+    if (allValid) {
+      this.glyphs = `${newPlanet}${this.glyphs.slice(1)}`;
+    }
   }
-
-  get diagnostic() { return JSON.stringify({a: this.address, g: this.glyphs}); }
 
 }

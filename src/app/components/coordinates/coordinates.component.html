@@ -1,23 +1,37 @@
-<div id="coordinates">
-  <!-- <pre>{{diagnostic}}</pre> -->
+<form id="coordinates" #coordinates="ngForm">
   <label for="galactic-address">Galactic Address</label>
   <input type="text" id="galactic-address"
+    placeholder="0001:0001:0001:0001"
     maxlength="19" appGalacticAddress
     [(ngModel)]="address" name="galactic-address"
-    #gAddress="ngModel" (input)="onInputGalacticAddress(gAddress.value, gAddress.valid)">
+    #gAddress="ngModel" (input)="onInputGalacticAddress(gAddress.value, gAddress.valid, destination.value, destination.valid)">
+  <div class="status invalid"
+    *ngIf="gAddress.value?.length && gAddress.invalid && (gAddress.touched ||gAddress.dirty)">
+    <div *ngIf="gAddress.errors?.invalidGalacticAddress">
+      Invalid galactic address.
+    </div>
+    <div *ngIf="gAddress.errors?.systemIdOutOfRange">
+      <em>System ID out of range:</em> {{gAddress.errors.systemIdOutOfRange}}.
+    </div>
+    <div *ngIf="gAddress.errors?.xCoordinateOutOfRange">
+      <em>X coordinate out of range:</em> {{gAddress.errors.xCoordinateOutOfRange}}.
+    </div>
+    <div *ngIf="gAddress.errors?.yCoordinateOutOfRange">
+      <em>Y coordinate out of range:</em> {{gAddress.errors.yCoordinateOutOfRange}}.
+    </div>
+    <div *ngIf="gAddress.errors?.zCoordinateOutOfRange">
+      <em>Z coordinate out of range:</em> {{gAddress.errors.zCoordinateOutOfRange}}.
+    </div>
+  </div>
   
   <label for="portal-address">Portal Address</label>
   <input type="text" id="portal-address"
+    placeholder="000101001001"
     maxlength="12" appPortalAddress
     [(ngModel)]="glyphs" name="portal-address"
     #pAddress="ngModel" (input)="onInputPortalAddress(pAddress.value, pAddress.valid)">
-  <div class="status"
-    *ngIf="pAddress.value?.length && (pAddress.valid || pAddress.invalid && (pAddress.touched || pAddress.dirty))"
-    [class.valid]="pAddress.valid"
-    [class.invalid]="pAddress.invalid && (pAddress.touched || pAddress.dirty)">
-    <div *ngIf="pAddress.valid">
-      Valid portal address.
-    </div>
+  <div class="status invalid"
+    *ngIf="pAddress.value?.length && pAddress.invalid && (pAddress.touched || pAddress.dirty)">
     <div *ngIf="pAddress.errors?.invalidPortalAddress">
       Invalid portal address.
     </div>
@@ -37,7 +51,18 @@
       <em>Z coordinate out of range:</em> {{pAddress.errors.zCoordinateOutOfRange}}.
     </div>
   </div>
+
+  <label for="destination-planet">Destination Planet</label>
+  <input type="text" id="destination-planet"
+    placeholder="0 - 6"
+    maxlength="1" pattern="[0-6]" appPlanetDestination
+    [(ngModel)]="planet" name="destination-planet"
+    #destination="ngModel" (input)="onInputPlanetDestination(destination.value, destination.valid, coordinates.valid)">
+  <div class="status invalid"
+    *ngIf="destination.value?.length && destination.invalid && (destination.touched || destination.dirty)">
+    Invalid planet destination.
+  </div>
   
   <label for="portal-glyphs">Portal Glyphs</label>
   <div id="portal-glyphs">{{glyphs}}</div>
-</div>
+</form>
