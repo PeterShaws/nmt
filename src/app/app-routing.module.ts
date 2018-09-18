@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { TranslatorComponent } from './translator/translator.component';
-import { CoordinatesComponent } from 'src/app/coordinates/coordinates.component';
+import { TranslatorComponent } from './components/translator/translator.component';
+import { CoordinatesComponent } from './components/coordinates/coordinates.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/translator', pathMatch: 'full' },

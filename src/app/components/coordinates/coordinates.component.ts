@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CoordinatesService } from '../coordinates.service';
+import { CoordinatesService } from '../../services/coordinates.service';
 
 @Component({
   selector: 'app-coordinates',

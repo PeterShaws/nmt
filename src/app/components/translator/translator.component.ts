@@ -1,6 +1,6 @@
 import { Component, AfterViewInit } from '@angular/core';
 
-import { TranslatorService } from '../translator.service';
+import { TranslatorService } from '../../services/translator.service';
 
 @Component({
   selector: 'app-translator',

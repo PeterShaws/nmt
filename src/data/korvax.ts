@@ -1,4 +1,4 @@
-import { Dictionary } from '../app/dictionary';
+import { Dictionary } from '../app/models/dictionary';
 
 export const KORVAX: Dictionary = {
     language: 'korvax',
