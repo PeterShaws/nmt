@@ -12,7 +12,7 @@ export class AppComponent implements OnInit {
   title = 'No Man’s Tools';
   currentPath: string;
   footerLink = 'https://www.reddit.com/message/compose/?to=agnoristos';
-  footerMessage = 'Created by Peter Shaws aka u/agnoristos';
+  footerMessage = 'Created by u/agnoristos';
 
   constructor(
     private router: Router,
