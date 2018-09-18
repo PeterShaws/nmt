@@ -16,13 +16,25 @@ export class CoordinatesComponent implements OnInit {
     this.glyphs = '';
   }
 
-  onInputAddress(newAddress: string, valid: boolean): void {
+  onInputGalacticAddress(newAddress: string, valid: boolean): void {
     if (valid) {
-      this.glyphs = this.coordinatesService.convertAddress(newAddress);
+      this.glyphs = this.coordinatesService.convertGalacticAddress(newAddress);
+    } else {
+      this.glyphs = '';
     }
   }
-  
+
+  onInputPortalAddress(newAddress: string, valid: boolean): void {
+    if (valid) {
+      this.address = this.coordinatesService.convertPortalAddress(newAddress);
+    } else {
+      this.address = '';
+    }
+  }
+
   ngOnInit() {
   }
+
+  get diagnostic() { return JSON.stringify({a: this.address, g: this.glyphs}); }
 
 }

@@ -9,6 +9,13 @@
     font-weight: 300;
 }
 
+@font-face {
+    font-family: 'NMS Glyphs';
+    src: url('./assets/NMS-Glyphs-Mono.ttf') format('truetype');
+    font-style: normal;
+    font-weight: normal;
+}
+
 *, *::before, *::after {
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;

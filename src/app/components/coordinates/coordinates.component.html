@@ -1,16 +1,43 @@
 <div id="coordinates">
+  <!-- <pre>{{diagnostic}}</pre> -->
   <label for="galactic-address">Galactic Address</label>
   <input type="text" id="galactic-address"
     maxlength="19" appGalacticAddress
     [(ngModel)]="address" name="galactic-address"
-    #gAddress="ngModel" (input)="onInputAddress(gAddress.value, gAddress.valid)">
+    #gAddress="ngModel" (input)="onInputGalacticAddress(gAddress.value, gAddress.valid)">
   
   <label for="portal-address">Portal Address</label>
-  <input type="text" maxlength="12"
-    name="portal-address" id="portal-address"
+  <input type="text" id="portal-address"
+    maxlength="12" appPortalAddress
     [(ngModel)]="glyphs" name="portal-address"
-    #pAddress="ngModel">
+    #pAddress="ngModel" (input)="onInputPortalAddress(pAddress.value, pAddress.valid)">
+  <div class="status"
+    *ngIf="pAddress.value?.length && (pAddress.valid || pAddress.invalid && (pAddress.touched || pAddress.dirty))"
+    [class.valid]="pAddress.valid"
+    [class.invalid]="pAddress.invalid && (pAddress.touched || pAddress.dirty)">
+    <div *ngIf="pAddress.valid">
+      Valid portal address.
+    </div>
+    <div *ngIf="pAddress.errors?.invalidPortalAddress">
+      Invalid portal address.
+    </div>
+    <div *ngIf="pAddress.errors?.portalIdOutOfRange">
+      <em>Portal ID out of range:</em> {{pAddress.errors.portalIdOutOfRange}}.
+    </div>
+    <div *ngIf="pAddress.errors?.systemIdOutOfRange">
+      <em>System ID out of range:</em> {{pAddress.errors.systemIdOutOfRange}}.
+    </div>
+    <div *ngIf="pAddress.errors?.xCoordinateOutOfRange">
+      <em>X coordinate out of range:</em> {{pAddress.errors.xCoordinateOutOfRange}}.
+    </div>
+    <div *ngIf="pAddress.errors?.yCoordinateOutOfRange">
+      <em>Y coordinate out of range:</em> {{pAddress.errors.yCoordinateOutOfRange}}.
+    </div>
+    <div *ngIf="pAddress.errors?.zCoordinateOutOfRange">
+      <em>Z coordinate out of range:</em> {{pAddress.errors.zCoordinateOutOfRange}}.
+    </div>
+  </div>
   
   <label for="portal-glyphs">Portal Glyphs</label>
-  <div id="portal-glyphs"></div>
+  <div id="portal-glyphs">{{glyphs}}</div>
 </div>

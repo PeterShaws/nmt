@@ -1,10 +1,6 @@
 import { Injectable } from '@angular/core';
 
-const MIN_X = 0x0; const MAX_X = 0xFFF; const LEN_X = 3;
-const MIN_Y = 0x0; const MAX_Y = 0xFF;  const LEN_Y = 2;
-const MIN_Z = 0x0; const MAX_Z = 0xFFF; const LEN_Z = 3;
-const MIN_S = 0x1; const MAX_S = 0x2FF; const LEN_S = 3;
-const MIN_P = 0x0; const MAX_P = 0x6;   const LEN_P = 1;
+import { LIMITS } from '../models/constants';
 
 @Injectable({
   providedIn: 'root'
@@ -16,20 +12,32 @@ export class CoordinatesService {
   /**
    * Normalizes a given coordinate string, clamping it between a minimum (provided or `0x0`) and a
    * maximum (provided or `0xFFF`), and also optionally setting the length of the resulting string.
-   * 
+   *
    * @param {string} coordinate The coordinate string to be normalized.
-   * @param {number} [min=MIN_X] The lower bound for the normalized coordinate (optional: `0x0` by
-   * default).
-   * @param {number} [max=MAX_X] The upper bound for the normalized coordinate (optional: `0xFFF`
-   * by default).
-   * @param {boolean} [translate=false] Whether to translate the coordinate around the center of the
-   * interval; useful to go from galactic address to portal glyphs (optional: `false` by default).
+   * @param {number} [min=LIMITS.x.min] The lower bound for the normalized coordinate (optional:
+   * `0x0` by default).
+   * @param {number} [max=LIMITS.x.max] The upper bound for the normalized coordinate (optional:
+   * `0xFFF` by default).
    * @param {number} [length] The intended length of the resulting string; the result will be
    * padded with zeroes to the left if its length is smaller than this value, or sliced to its
-   * `length` last digits if greater.
+   * `length` last digits if greater (optionl: the string will not be sliced nor padded if this
+   * is not provided).
+   * @param {(min: number, max: number) => number} [center=null] A function that calculates the
+   * center of the interval from its lower and upper bounds (optional: `null` by default; ignored
+   * if `boundary` isn't provided).
+   * @param {(min: number, max: number) => number} [boundary=null] A function that calculates the
+   * upper limit over which the normalized coordinate should loop over (optional: `null` by
+   * default; ignored if `center` isn't provided).
    * @returns {string} The normalized coordinate string.
    */
-  private normalizeCoordinate(coordinate: string, min: number = MIN_X, max: number = MAX_X, translate: boolean = false, length?: number): string {
+  private normalizeCoordinate(
+    coordinate: string,
+    min: number = LIMITS.x.min,
+    max: number = LIMITS.x.max,
+    length?: number,
+    center: (min: number, max: number) => number = null,
+    boundary: (min: number, max: number) => number = null
+  ): string {
     let normalized = parseInt(coordinate, 16);
 
     if (isNaN(normalized)) { normalized = 0; }
@@ -40,9 +48,9 @@ export class CoordinatesService {
       normalized = max;
     }
 
-    if (translate) {
-      normalized += (Math.floor(max / 2) + 2);
-      normalized %= (max + 1);
+    if (center && boundary) {
+      normalized += center(min, max);
+      normalized %= boundary(min, max);
     }
 
     let result = normalized.toString(16).toUpperCase();
@@ -59,27 +67,55 @@ export class CoordinatesService {
   }
 
   /**
-   * Converts a galactic address into the corresponding portal glyph sequence.
-   * 
+   * Converts a galactic address into the corresponding portal address.
+   *
    * @param {string} address The string of signal booster coordinates to be converted.
    * @param {string} [portalId=`${MIN_P}`] The ID of the portal within the target system, limited to
    * `1..6` (optional: `'1'` by default).
    * @returns {string} The converted portal address.
    */
-  convertAddress(address: string, portalId: string = MIN_P.toString(16)): string {
+  convertGalacticAddress(address: string, portalId: string = LIMITS.p.min.toString(16)): string {
     let [xCoord, yCoord, zCoord, systemId] = address.split(':');
-    
-    xCoord   = this.normalizeCoordinate(xCoord,   MIN_X, MAX_X, true,  LEN_X);
-    yCoord   = this.normalizeCoordinate(yCoord,   MIN_Y, MAX_Y, true,  LEN_Y);
-    zCoord   = this.normalizeCoordinate(zCoord,   MIN_Z, MAX_Z, true,  LEN_Z);
-    systemId = this.normalizeCoordinate(systemId, MIN_S, MAX_S, false, LEN_S);
-    portalId = this.normalizeCoordinate(portalId, MIN_P, MAX_P, false, LEN_P);
-    
+
+    const center = (min: number, max: number): number => {
+      return Math.floor((max - min) / 2) + 2;
+    };
+    const boundary = (min: number, max: number): number => {
+      return (max - min) + 1;
+    };
+
+    xCoord   = this.normalizeCoordinate(xCoord,   LIMITS.x.min, LIMITS.x.max, LIMITS.x.length, center, boundary);
+    yCoord   = this.normalizeCoordinate(yCoord,   LIMITS.y.min, LIMITS.y.max, LIMITS.y.length, center, boundary);
+    zCoord   = this.normalizeCoordinate(zCoord,   LIMITS.z.min, LIMITS.z.max, LIMITS.z.length, center, boundary);
+    systemId = this.normalizeCoordinate(systemId, LIMITS.s.min, LIMITS.s.max, LIMITS.s.length);
+    portalId = this.normalizeCoordinate(portalId, LIMITS.p.min, LIMITS.p.max, LIMITS.p.length);
+
     return portalId + systemId + yCoord + zCoord + xCoord;
   }
 
-  convertGlyphs(glyphs: string): string {
-    return '';
+  /**
+   * Converts a portal address into the corresponding galactic address.
+   *
+   * @param {string} address The string of portal glyphs values to be converted.
+   * @returns {string} The converted galactic address.
+   */
+  convertPortalAddress(address: string): string {
+    // tslint:disable-next-line:prefer-const
+    let [match, systemId, yCoord, zCoord, xCoord] = address.match(/[0-9A-F]{1}([0-9A-F]{3})([0-9A-F]{2})([0-9A-F]{3})([0-9A-F]{3})/);
+
+    const center = (min: number, max: number): number => {
+      return Math.floor((max - min) / 2);
+    };
+    const boundary = (min: number, max: number): number => {
+      return (max - min) + 1;
+    };
+
+    xCoord   = this.normalizeCoordinate(xCoord,   LIMITS.x.min, LIMITS.x.max, 4, center, boundary);
+    yCoord   = this.normalizeCoordinate(yCoord,   LIMITS.y.min, LIMITS.y.max, 4, center, boundary);
+    zCoord   = this.normalizeCoordinate(zCoord,   LIMITS.z.min, LIMITS.z.max, 4, center, boundary);
+    systemId = this.normalizeCoordinate(systemId, LIMITS.s.min, LIMITS.s.max, 4);
+
+    return [xCoord, yCoord, zCoord, systemId].join(':');
   }
 
 }

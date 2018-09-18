@@ -21,12 +21,52 @@
         height: 50px;
         margin: $length-gutter;
         font-size: 40px;
+        letter-spacing: 4px;
     }
-    
+
+    .status {
+        width: 50%;
+        margin-top: -$length-gutter;
+        text-align: center;
+        font: {
+            family: $font-stack;
+            size: 14px;
+        }
+        letter-spacing: 2px;
+        background-color: darkslategrey;
+        color: white;
+
+        &.invalid {
+            background-color: brown;
+        }
+
+        div {
+            display: inline-block;
+            margin: 2px 6px;
+
+            em {
+                font-style: normal;
+                opacity: 0.66;
+            }
+        }
+    }
+
     #portal-glyphs {
         width: 50%;
-        height: 50px;
+        height: 70px;
         margin: $length-gutter;
+        padding: 2px 0 5px;
+        font: {
+            family: 'NMS Glyphs';
+            size: 60px;
+        }
+        text: {
+            align: center;
+            shadow:
+                0 0 2px aquamarine,
+                0 0 8px rgba(255, 255, 255, 0.8)
+        }
+        color: white;
         background-color: rgba(0, 0, 0, 0.5);
     }
 }

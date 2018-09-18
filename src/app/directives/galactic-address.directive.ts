@@ -18,7 +18,7 @@ export class GalacticAddressDirective implements Validator {
 
   @HostListener('input') oninput() {
     let formatted = (<HTMLInputElement>this.element.nativeElement).value.toUpperCase();
-    const matches = formatted.replace(/[^A-F0-9]/g, '').match(/.{1,4}/g);
+    const matches = formatted.replace(/[^0-9A-F]/g, '').match(/.{1,4}/g);
     formatted = matches ? matches.join(':') : '';
     (<NgControl>this.injector.get(NgControl)).control.setValue(formatted);
   }
@@ -32,7 +32,7 @@ export class GalacticAddressDirective implements Validator {
 export const galacticAddressValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
   const value: string = control.value;
 
-  return value && value.match(/([A-F0-9]{4}:){3}[A-F0-9]{4}/)
+  return value && value.match(/([0-9A-F]{4}:){3}[0-9A-F]{4}/)
     ? null
-    : { invalidGalacticAddress: true }
+    : { invalidGalacticAddress: true };
 };
