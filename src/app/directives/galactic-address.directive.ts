@@ -1,5 +1,6 @@
-import { Directive, ElementRef, Injector, HostListener } from '@angular/core';
+import { Directive, Injector, HostListener } from '@angular/core';
 import { NG_VALIDATORS, Validator, NgControl, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { LIMITS } from '../models/constants';
 
 @Directive({
   selector: '[appGalacticAddress]',
@@ -11,14 +12,12 @@ import { NG_VALIDATORS, Validator, NgControl, AbstractControl, ValidationErrors,
 })
 export class GalacticAddressDirective implements Validator {
 
-  constructor(
-    private element: ElementRef,
-    private injector: Injector
-  ) { }
+  constructor(private injector: Injector) { }
 
-  @HostListener('input') oninput() {
-    let formatted = (<HTMLInputElement>this.element.nativeElement).value.toUpperCase();
-    const matches = formatted.replace(/[^0-9A-F]/g, '').match(/.{1,4}/g);
+  @HostListener('input') onInput() {
+    let formatted = (<string>(<NgControl>this.injector.get(NgControl)).value)
+      .toUpperCase().replace(/[^0-9A-F]/g, '');
+    const matches = formatted.match(/.{1,4}/g);
     formatted = matches ? matches.join(':') : '';
     (<NgControl>this.injector.get(NgControl)).control.setValue(formatted);
   }
@@ -31,8 +30,39 @@ export class GalacticAddressDirective implements Validator {
 
 export const galacticAddressValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
   const value: string = control.value;
+  let match: RegExpMatchArray;
+  const errors: ValidationErrors = {invalidGalacticAddress: false};
 
-  return value && value.match(/([0-9A-F]{4}:){3}[0-9A-F]{4}/)
-    ? null
-    : { invalidGalacticAddress: true };
+  if (!value || !(match = value.match(/([0-9A-F]{4}):([0-9A-F]{4}):([0-9A-F]{4}):([0-9A-F]{4})/))) {
+    errors.invalidGalacticAddress = true;
+  } else {
+    const [fullMatch, xCoord, yCoord, zCoord, systemId] = match;
+
+    if (value && fullMatch) {
+      const s = parseInt(systemId, 16);
+      if (s < LIMITS.s.min || s > LIMITS.s.max) {
+        errors.systemIdOutOfRange = systemId;
+      }
+      const x = parseInt(xCoord, 16);
+      if (x < LIMITS.x.min || x > LIMITS.x.max) {
+        errors.xCoordinateOutOfRange = xCoord;
+      }
+      const y = parseInt(yCoord, 16);
+      if (y < LIMITS.y.min || y > LIMITS.y.max) {
+        errors.yCoordinateOutOfRange = yCoord;
+      }
+      const z = parseInt(zCoord, 16);
+      if (z < LIMITS.z.min || z > LIMITS.z.max) {
+        errors.zCoordinateOutOfRange = zCoord;
+      }
+
+      if (Object.keys(errors).length > 1) {
+        errors.invalidGalacticAddress = true;
+      }
+    } else {
+      errors.invalidGalacticAddress = true;
+    }
+  }
+
+  return errors.invalidGalacticAddress ? errors : null;
 };

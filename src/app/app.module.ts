@@ -11,6 +11,7 @@ import { TranslatorComponent } from './components/translator/translator.componen
 import { CoordinatesComponent } from './components/coordinates/coordinates.component';
 import { GalacticAddressDirective } from './directives/galactic-address.directive';
 import { PortalAddressDirective } from './directives/portal-address.directive';
+import { PlanetDestinationDirective } from './directives/planet-destination.directive';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { PortalAddressDirective } from './directives/portal-address.directive';
     TranslatorComponent,
     CoordinatesComponent,
     GalacticAddressDirective,
-    PortalAddressDirective
+    PortalAddressDirective,
+    PlanetDestinationDirective
   ],
   imports: [
     BrowserModule,
