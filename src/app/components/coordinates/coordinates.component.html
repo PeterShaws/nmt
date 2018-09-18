@@ -1,18 +1,16 @@
 <div id="coordinates">
-  <div class="group">
-    <label for="galactic-address">Galactic Address</label>
-    <input type="text" id="galactic-address"
-      maxlength="19" appGalacticAddress
-      [(ngModel)]="address" name="galactic-address"
-      #gAddress="ngModel" (input)="onInputAddress(gAddress.value, gAddress.valid)">
-  </div>
-  <div class="group">
-    <label for="portal-address">Portal Address</label>
-    <input type="text" maxlength="12"
-      name="portal-address" id="portal-address"
-      [(ngModel)]="glyphs" name="portal-address"
-      #pAddress="ngModel">
-    <label for="portal-glyphs">Portal Glyphs</label>
-  </div>
+  <label for="galactic-address">Galactic Address</label>
+  <input type="text" id="galactic-address"
+    maxlength="19" appGalacticAddress
+    [(ngModel)]="address" name="galactic-address"
+    #gAddress="ngModel" (input)="onInputAddress(gAddress.value, gAddress.valid)">
+  
+  <label for="portal-address">Portal Address</label>
+  <input type="text" maxlength="12"
+    name="portal-address" id="portal-address"
+    [(ngModel)]="glyphs" name="portal-address"
+    #pAddress="ngModel">
+  
+  <label for="portal-glyphs">Portal Glyphs</label>
   <div id="portal-glyphs"></div>
 </div>
