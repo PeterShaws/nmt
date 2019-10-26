@@ -2,80 +2,88 @@
 @import '../../../globals';
 
 #translators {
-    width: 100%;
-    margin: 0;
-    padding: 0 $length-gutter (26px + $length-gutter);
-    display: flex;
-    flex-flow: row wrap;
-    align-content: center;
-    align-items: flex-start;
-    justify-content: center;
-    justify-items: center;
+  width: 100%;
+  margin: 0;
+  padding: 0 $length-gutter (26px + $length-gutter);
+  display: flex;
+  flex-flow: row wrap;
+  align-content: center;
+  align-items: flex-start;
+  justify-content: center;
+  justify-items: center;
+
+  @include respond-to(small-screen) {
+    padding: 0 0 (26px + $length-gutter);
+  }
+
+  .language {
+    width: calc(50% - 2 * #{$length-gutter});
+    margin: 0 $length-gutter;
 
     @include respond-to(small-screen) {
-        padding: 0 0 (26px + $length-gutter);
+      width: 100%;
+      margin: 0;
+    }
+    @include respond-to(medium-screen) {
+      width: 50%;
+      margin: 0;
+      height: calc(100% - 4 * #{$length-gutter});
     }
 
-    .language {
-        width: calc(50% - 2 * #{$length-gutter});
-        margin: 0 $length-gutter;
+    &.english {
+      width: calc(100% - 2 * #{$length-gutter});
 
-        @include respond-to(small-screen) {
-            width: 100%;
-            margin: 0;
-        }
-        @include respond-to(medium-screen) {
-            width: 50%;
-            margin: 0;
-            height: calc(100% - 4 * #{$length-gutter});
-        }
-
-        &.english {
-            width: calc(100% - 2 * #{$length-gutter});
-
-            @include respond-to(small-screen) {
-                width: 100%;
-            }
-            @include respond-to(medium-screen) {
-                width: 100%;
-            }
-        }
-    
-        .name {
-            padding: $length-gutter;
-            text: {
-                align: center;
-                transform: uppercase;
-            }
-            font: {
-                family: $font-stack;
-                size: 24px;
-            }
-            letter-spacing: 1px;
-            color: white;
-
-            @include respond-to(small-screen) {
-                font-size: 18px;
-            }
-        }
-    
-        textarea {
-            width: 100%;
-            height: 125px;
-            resize: none;
-            overflow-x: hidden;
-            overflow-y: auto;
-            
-            @extend %input-box;
-            @include respond-to(small-screen) {
-                font-size: 18px;
-                box-shadow: none;
-            }
-    
-            &.gek    { color: yellowgreen; }
-            &.korvax { color: violet; }
-            &.vykeen { color: tomato; }
-            &.atlas  { color: lightsalmon; }
-        }
+      @include respond-to(small-screen) {
+        width: 100%;
+      }
+      @include respond-to(medium-screen) {
+        width: 100%;
+      }
     }
+
+    .name {
+      padding: $length-gutter;
+      text: {
+        align: center;
+        transform: uppercase;
+      }
+      font: {
+        family: $font-stack;
+        size: 24px;
+      }
+      letter-spacing: 1px;
+      color: white;
+
+      @include respond-to(small-screen) {
+        font-size: 18px;
+      }
+    }
+
+    textarea {
+      width: 100%;
+      height: 125px;
+      resize: none;
+      overflow-x: hidden;
+      overflow-y: auto;
+
+      @extend %input-box;
+      @include respond-to(small-screen) {
+        font-size: 18px;
+        box-shadow: none;
+      }
+
+      &.gek {
+        color: yellowgreen;
+      }
+      &.korvax {
+        color: violet;
+      }
+      &.vykeen {
+        color: tomato;
+      }
+      &.atlas {
+        color: lightsalmon;
+      }
+    }
+  }
 }

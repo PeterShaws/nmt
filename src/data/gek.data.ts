@@ -1,4 +1,4 @@
-import { Dictionary } from '../app/models/dictionary';
+import { Dictionary } from '@models/dictionary.model';
 
 export const GEK: Dictionary = {
     language: 'gek',

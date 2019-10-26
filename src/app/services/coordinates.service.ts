@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { LIMITS } from '../models/constants';
+import { LIMITS } from '../models/limits.model';
 
 @Injectable({
   providedIn: 'root'

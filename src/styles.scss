@@ -3,118 +3,116 @@
 @import './globals';
 
 @font-face {
-    font-family: 'GeoNMS';
-    src: url('./assets/geonms.ttf') format('truetype');
-    font-style: normal;
-    font-weight: 300;
+  font-family: 'GeoNMS';
+  src: url('./assets/geonms.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 300;
 }
 
 @font-face {
-    font-family: 'NMS Glyphs';
-    src: url('./assets/NMS-Glyphs-Mono.ttf') format('truetype');
-    font-style: normal;
-    font-weight: normal;
+  font-family: 'NMS Glyphs';
+  src: url('./assets/NMS-Glyphs-Mono.ttf') format('truetype');
+  font-style: normal;
+  font-weight: normal;
 }
 
-*, *::before, *::after {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
+*,
+*::before,
+*::after {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 html {
-    height: calc(100% - 150px);
+  height: calc(100% - 150px);
 }
 
 body {
-    height: 100%;
-    margin: 0;
-    background: {
-        color: #bcc5ce;
-        image: radial-gradient(
-            circle at 75% 75%,
-            #bcc5ce 0%,
-            #667a92 45%,
-            #0b1723 90%,
-            #3b4858 100%);
-        repeat: no-repeat;
-        attachment: fixed;
-    }
+  height: 100%;
+  margin: 0;
+  background: {
+    color: #bcc5ce;
+    image: radial-gradient(circle at 75% 75%, #bcc5ce 0%, #667a92 45%, #0b1723 90%, #3b4858 100%);
+    repeat: no-repeat;
+    attachment: fixed;
+  }
 }
 
 h2.component {
-    position: relative;
+  position: relative;
+  width: 100%;
+  margin: 0 0 $length-gutter;
+  padding: $length-gutter 0;
+  text: {
+    align: center;
+    transform: uppercase;
+  }
+  font: {
+    weight: normal;
+    family: $font-stack;
+    size: 32px;
+  }
+  letter-spacing: 2px;
+  background: #000000;
+  background: linear-gradient(
+    90deg,
+    rgba(0, 0, 0, 0.2) 0%,
+    rgba(0, 0, 0, 0.5) 12.5%,
+    rgba(0, 0, 0, 0.5) 25%,
+    rgba(0, 0, 0, 0.1) 100%
+  );
+  color: white;
+
+  @include respond-to(small-screen) {
     width: 100%;
     margin: 0 0 $length-gutter;
     padding: $length-gutter 0;
-    text: {
-        align: center;
-        transform: uppercase;
-    }
-    font: {
-        weight: normal;
-        family: $font-stack;
-        size: 32px;
-    }
-    letter-spacing: 2px;
-    background: #000000;
-    background: linear-gradient(
-        90deg,
-        rgba(0,0,0,0.2) 0%,
-        rgba(0,0,0,0.5) 12.5%,
-        rgba(0,0,0,0.5) 25%,
-        rgba(0,0,0,0.1) 100%); 
-    color: white;
+    text-align: center;
+    font-size: 24px;
+  }
+  @include respond-to(medium-screen) {
+    width: 100%;
+    margin-top: 0;
+    padding: $length-gutter 0;
+    text-align: center;
+  }
 
-    @include respond-to(small-screen) {
-        width: 100%;
-        margin: 0 0 $length-gutter;
-        padding: $length-gutter 0;
-        text-align: center;
-        font-size: 24px;
-    }
-    @include respond-to(medium-screen) {
-        width: 100%;
-        margin-top: 0;
-        padding: $length-gutter 0;
-        text-align: center;
+  .logo {
+    $logo-size: 15px;
+    $circle-size: 2 * $logo-size / 3;
+    display: inline-block;
+    position: relative;
+    top: -$circle-size;
+    width: 0;
+    height: 0;
+    border: $logo-size solid transparent {
+      bottom-color: currentColor;
     }
 
-    .logo {
-        $logo-size: 15px;
-        $circle-size: 2 * $logo-size / 3;
-        display: inline-block;
-        position: relative;
-        top: -$circle-size;
-        width: 0;
-        height: 0;
-        border: $logo-size solid transparent {
-            bottom-color: currentColor;
-        };
+    // @include respond-to(small-screen) {
+    //     display: none;
+    // }
 
-        // @include respond-to(small-screen) {
-        //     display: none;
-        // }
-
-        &::before {
-            content: '';
-            position: absolute;
-            top: $logo-size;
-            left: -$logo-size;
-            border: $logo-size solid transparent {
-                top-color: currentColor;
-            }
-        }
-        &::after {
-            content: '';
-            position: absolute;
-            top: $circle-size;
-            left: $circle-size / -2; // was -5px
-            width: $circle-size;
-            height: $circle-size;
-            background-color: black;
-            border-radius: 50%;
-            opacity: 0.8;
-        }
+    &::before {
+      content: '';
+      position: absolute;
+      top: $logo-size;
+      left: -$logo-size;
+      border: $logo-size solid transparent {
+        top-color: currentColor;
+      }
     }
+    &::after {
+      content: '';
+      position: absolute;
+      top: $circle-size;
+      left: $circle-size / -2; // was -5px
+      width: $circle-size;
+      height: $circle-size;
+      background-color: black;
+      border-radius: 50%;
+      opacity: 0.8;
+    }
+  }
 }

@@ -1,6 +1,6 @@
 import { Directive, Injector, HostListener } from '@angular/core';
 import { NG_VALIDATORS, Validator, NgControl, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
-import { LIMITS } from '../models/constants';
+import { LIMITS } from '@models/limits.model';
 
 @Directive({
   selector: '[appGalacticAddress]',
