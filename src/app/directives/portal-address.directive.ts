@@ -4,7 +4,7 @@ import { aOutsideBC } from '@helpers/js.helper';
 import { LIMITS } from '@models/limits.model';
 
 @Directive({
-  selector: '[appPortalAddress]',
+  selector: '[nmtPortalAddress]',
   providers: [{
     provide: NG_VALIDATORS,
     useExisting: PortalAddressDirective,

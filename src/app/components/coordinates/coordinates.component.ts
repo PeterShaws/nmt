@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CoordinatesService } from '@services/coordinates.service';
 
 @Component({
-  selector: 'app-coordinates',
+  selector: 'nmt-coordinates',
   templateUrl: './coordinates.component.html',
   styleUrls: ['./coordinates.component.scss']
 })

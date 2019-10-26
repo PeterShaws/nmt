@@ -4,7 +4,7 @@ import { aOutsideBC } from '@helpers/js.helper';
 import { LIMITS } from '@models/limits.model';
 
 @Directive({
-  selector: '[appGalacticAddress]',
+  selector: '[nmtGalacticAddress]',
   providers: [{
     provide: NG_VALIDATORS,
     useExisting: GalacticAddressDirective,

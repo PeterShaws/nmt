@@ -2,7 +2,7 @@
   <label for="galactic-address">Galactic Address</label>
   <input type="text" id="galactic-address"
     placeholder="0001:0001:0001:0001"
-    maxlength="19" appGalacticAddress
+    maxlength="19" nmtGalacticAddress
     [(ngModel)]="address" name="galactic-address"
     #gAddress="ngModel" (input)="onInputGalacticAddress(gAddress.value, gAddress.valid, destination.value, destination.valid)">
   <div class="status invalid"
@@ -27,7 +27,7 @@
   <label for="portal-address">Portal Address</label>
   <input type="text" id="portal-address"
     placeholder="000101001001"
-    maxlength="12" appPortalAddress
+    maxlength="12" nmtPortalAddress
     [(ngModel)]="glyphs" name="portal-address"
     #pAddress="ngModel" (input)="onInputPortalAddress(pAddress.value, pAddress.valid)">
   <div class="status invalid"
@@ -55,7 +55,7 @@
   <label for="destination-planet">Destination Planet</label>
   <input type="text" id="destination-planet"
     placeholder="0 - 6"
-    maxlength="1" pattern="[0-6]" appPlanetDestination
+    maxlength="1" pattern="[0-6]" nmtPlanetDestination
     [(ngModel)]="planet" name="destination-planet"
     #destination="ngModel" (input)="onInputPlanetDestination(destination.value, destination.valid, coordinates.valid)">
   <div class="status invalid"

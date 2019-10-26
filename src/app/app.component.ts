@@ -3,7 +3,7 @@ import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-root',
+  selector: 'nmt-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
