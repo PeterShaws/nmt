@@ -1,16 +1,16 @@
 <div id="header">
-    <div class="title">
-        <h1>{{title}}</h1>
-        <h2>{{currentPath}}</h2>
-    </div>
-    <nav>
-        <a routerLink="/translator" routerLinkActive="active">Translator</a>
-        <a routerLink="/coordinates" routerLinkActive="active">Coordinates</a>
-        <a routerLink="/ships" routerLinkActive="active">Ships</a>
-        <a routerLink="/exploration" routerLinkActive="active">Exploration</a>
-    </nav>
+  <div class="title">
+    <h1>{{title}}</h1>
+    <h2>{{currentPath}}</h2>
+  </div>
+  <nav>
+    <a routerLink="/translator" routerLinkActive="active">Translator</a>
+    <a routerLink="/coordinates" routerLinkActive="active">Coordinates</a>
+    <a routerLink="/ships" routerLinkActive="active">Ships</a>
+    <a routerLink="/exploration" routerLinkActive="active">Exploration</a>
+  </nav>
 </div>
 <router-outlet></router-outlet>
 <div id="footer">
-    <a href="{{footerLink}}">{{footerMessage}}</a>
+  <a href="{{footerLink}}">{{footerMessage}}</a>
 </div>

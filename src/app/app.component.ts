@@ -23,7 +23,7 @@ export class AppComponent implements OnInit {
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {
-      this.currentPath = (<Function>this.route.snapshot.firstChild.component).name.replace('Component', '');
+      this.currentPath = (this.route.snapshot.firstChild.component as Function).name.replace('Component', '');
     });
   }
 

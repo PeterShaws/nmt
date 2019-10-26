@@ -9,7 +9,7 @@ import { catchError, map, tap } from 'rxjs/operators';
 })
 export class TranslatorService {
 
-  private dictionaries: Array<Dictionary> = [];
+  private dictionaries: Dictionary[] = [];
 
   constructor(private http: HttpClient) { }
 
@@ -40,10 +40,10 @@ export class TranslatorService {
    *
    * @private
    * @param {string} sentence The sentence to be split.
-   * @returns {Array<string>} A string array of the tokens contained in the sentence, minus any
+   * @returns {string[]} A string array of the tokens contained in the sentence, minus any
    * square brackets.
    */
-  private getTokens(sentence: string): Array<string> {
+  private getTokens(sentence: string): string[] {
     if (sentence.length > 0) {
       return sentence.match(/([a-zA-Z'\-]+|[^a-zA-Z\[\]\s]+|[\s]+)/g);
     } else {

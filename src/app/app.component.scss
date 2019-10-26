@@ -3,137 +3,122 @@
 @import '../globals';
 
 #header {
-    height: 50px;
-    margin: 0 0 30px;
+  height: 50px;
+  margin: 0 0 30px;
+  padding: 0;
+  border-bottom: 3px solid brown;
+  background-color: rgba(0, 0, 0, 0.66);
+  color: white;
+
+  .title {
+    position: absolute;
+    top: 20px;
+    left: 24px;
+    width: 300px;
+    height: 60px;
     padding: 0;
-    border-bottom: 3px solid brown;
-    background-color: rgba(0, 0, 0, 0.66);
-    color: white;
 
-    .title {
-        position: absolute;
-        top: 20px;
-        left: 24px;
-        width: 300px;
-        height: 60px;
-        padding: 0;
-        
-        h1 {
-            height: 30px;
-            margin: 0;
-            padding: 1px 8px;
-            font: {
-                family: $font-stack;
-                size: 20px;
-                weight: normal;
-            }
-            letter-spacing: 2px;
-            text-shadow: 1px 1px 0 black;
-            border-top: 3px solid brown;
-            background: {
-                color: brown;
-                image: linear-gradient(
-                    67.5deg,
-                    brown 20%,
-                    darken(brown, 12.5%) 100%);
-            };
-        }
-
-        h2 {
-            @extend h1;
-            padding-top: 4px;
-            border-top: none;
-            text-transform: capitalize;
-            background: {
-                color: darkslategrey;
-                image: linear-gradient(
-                        180deg,
-                        rgba(0,0,0,0.25) 0%,
-                        transparent 20%,
-                        transparent 100%
-                    ),
-                    linear-gradient(
-                        90deg,
-                        darkslategrey 20%,
-                        darken(darkslategrey, 12.5%) 100%
-                    );
-            };
-        }
+    h1 {
+      height: 30px;
+      margin: 0;
+      padding: 1px 8px;
+      font: {
+        family: $font-stack;
+        size: 20px;
+        weight: normal;
+      }
+      letter-spacing: 2px;
+      text-shadow: 1px 1px 0 black;
+      border-top: 3px solid brown;
+      background: {
+        color: brown;
+        image: linear-gradient(67.5deg, brown 20%, darken(brown, 12.5%) 100%);
+      }
     }
 
-    nav {
-        position: absolute;
-        top: 0;
-        right: 0;
-        height: 47px;
-        width: calc(100% - 500px);
-        text-align: left;
-
-        a {
-            position: relative;
-            display: inline-block;
-            height: 47px;
-            padding: 22px 20px 2px; 
-            font: {
-                family: $font-stack;
-                size: 20px;
-            };
-            letter-spacing: 1px;
-            text: {
-                align: center;
-                decoration: none;
-                transform: uppercase;
-            }
-            color: white;
-            opacity: 0.66;
-            outline: none;
-            transition: all .25s ease;
-
-            &:hover {
-                font-size: 22px;
-                padding-top: 20px;
-            }
-
-            &.active {
-                font-size: 24px;
-                padding-top: 18px;
-                opacity: 1;
-            }
-
-            &:not(:first-child)::before {
-                position: absolute;
-                content: '';
-                left: 0;
-                bottom: 0;
-                width: 1px;
-                height: 30px;
-                background-image: linear-gradient(
-                    180deg,
-                    transparent 0%,
-                    rgba(255, 255, 255, 0.2) 100%);
-            }
-        }
+    h2 {
+      @extend h1;
+      padding-top: 4px;
+      border-top: none;
+      text-transform: capitalize;
+      background: {
+        color: darkslategrey;
+        image: linear-gradient(180deg, rgba(0, 0, 0, 0.25) 0%, transparent 20%, transparent 100%),
+          linear-gradient(90deg, darkslategrey 20%, darken(darkslategrey, 12.5%) 100%);
+      }
     }
+  }
+
+  nav {
+    position: absolute;
+    top: 0;
+    right: 0;
+    height: 47px;
+    width: calc(100% - 500px);
+    text-align: left;
+
+    a {
+      position: relative;
+      display: inline-block;
+      height: 47px;
+      padding: 22px 20px 2px;
+      font: {
+        family: $font-stack;
+        size: 20px;
+      }
+      letter-spacing: 1px;
+      text: {
+        align: center;
+        decoration: none;
+        transform: uppercase;
+      }
+      color: white;
+      opacity: 0.66;
+      outline: none;
+      transition: all 0.25s ease;
+
+      &:hover {
+        font-size: 22px;
+        padding-top: 20px;
+      }
+
+      &.active {
+        font-size: 24px;
+        padding-top: 18px;
+        opacity: 1;
+      }
+
+      &:not(:first-child)::before {
+        position: absolute;
+        content: '';
+        left: 0;
+        bottom: 0;
+        width: 1px;
+        height: 30px;
+        background-image: linear-gradient(180deg, transparent 0%, rgba(255, 255, 255, 0.2) 100%);
+      }
+    }
+  }
 }
 
 #footer {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 26px;
-    padding: 4px 0;
-    text-align: center;
-    background-color: rgba(0, 0, 0, 0.66);
-    color: white;
-    font: {
-        family: $font-stack;
-        size: 18px;
-    }
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 26px;
+  padding: 4px 0;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.66);
+  color: white;
+  font: {
+    family: $font-stack;
+    size: 18px;
+  }
 
-    a {
-        text-decoration: none;
-        color: currentColor;
-        opacity: 0.66;
-    }
+  a {
+    text-decoration: none;
+    color: currentColor;
+    opacity: 0.66;
+  }
 }

@@ -35,28 +35,22 @@ export class TranslatorComponent implements AfterViewInit {
     const fromLanguage = textArea.dataset.language;
 
     if (this.languages[fromLanguage].sentence.length === 0) {  // No need to translate an empty sentence
-      for (const toLanguage in this.languages) {
-        if (this.languages.hasOwnProperty(toLanguage)) {
-          this.languages[toLanguage].sentence = '';
-        }
+      for (const toLanguage of this.languageNames) {
+        this.languages[toLanguage].sentence = '';
       }
     } else {
       if (fromLanguage === 'english') {
-        for (const toLanguage in this.languages) {
-          if (toLanguage !== 'english') {
-            this.translatorService.translateEnglishSentence$(toLanguage, this.languages.english.sentence)
-              .subscribe(alienTranslation => this.languages[toLanguage].sentence = alienTranslation);
-          }
+        for (const toLanguage of this.languageNames.filter(language => language !== 'english')) {
+          this.translatorService.translateEnglishSentence$(toLanguage, this.languages.english.sentence)
+            .subscribe(alienTranslation => this.languages[toLanguage].sentence = alienTranslation);
         }
       } else {
         this.translatorService.translateAlienSentence$(fromLanguage, this.languages[fromLanguage].sentence)
           .subscribe(englishTranslation => {
             this.languages.english.sentence = englishTranslation;
-            for (const toLanguage in this.languages) {
-              if (toLanguage !== 'english' && toLanguage !== fromLanguage) {
-                this.translatorService.translateEnglishSentence$(toLanguage, englishTranslation)
-                  .subscribe(alienTranslation => this.languages[toLanguage].sentence = alienTranslation);
-              }
+            for (const toLanguage of this.languageNames.filter(language => language !== 'english' && language !== fromLanguage)) {
+              this.translatorService.translateEnglishSentence$(toLanguage, englishTranslation)
+                .subscribe(alienTranslation => this.languages[toLanguage].sentence = alienTranslation);
             }
           });
       }
