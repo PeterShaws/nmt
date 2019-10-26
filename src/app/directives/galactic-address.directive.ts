@@ -1,5 +1,6 @@
-import { Directive, Injector, HostListener } from '@angular/core';
-import { NG_VALIDATORS, Validator, NgControl, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { Directive, HostListener, InjectionToken, Injector } from '@angular/core';
+import { AbstractControl, NgControl, NG_VALIDATORS, ValidationErrors, Validator, ValidatorFn } from '@angular/forms';
+import { aOutsideBC } from '@helpers/js.helper';
 import { LIMITS } from '@models/limits.model';
 
 @Directive({
@@ -12,57 +13,48 @@ import { LIMITS } from '@models/limits.model';
 })
 export class GalacticAddressDirective implements Validator {
 
-  constructor(private injector: Injector) { }
+  constructor(
+    private injector: Injector,
+    private ngControl = new InjectionToken<NgControl>('NgControl')
+  ) { }
 
   @HostListener('input') onInput() {
-    let formatted = (<string>(<NgControl>this.injector.get(NgControl)).value)
+    let formatted = (this.injector.get(this.ngControl).value as string)
       .toUpperCase().replace(/[^0-9A-F]/g, '');
     const matches = formatted.match(/.{1,4}/g);
     formatted = matches ? matches.join(':') : '';
-    (<NgControl>this.injector.get(NgControl)).control.setValue(formatted);
+    this.injector.get(this.ngControl).control.setValue(formatted);
   }
 
   validate(control: AbstractControl): ValidationErrors {
-    return galacticAddressValidator(control);
+    return this.galacticAddressValidator(control);
+  }
+
+  private galacticAddressValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    const value: string = control.value;
+    let match: RegExpMatchArray;
+    const errors: ValidationErrors = { invalidGalacticAddress: false };
+
+    if (!value || !(match = value.match(/([0-9A-F]{4}):([0-9A-F]{4}):([0-9A-F]{4}):([0-9A-F]{4})/))) {
+      errors.invalidGalacticAddress = true;
+    } else {
+      const [fullMatch, xCoord, yCoord, zCoord, systemId] = match.map((v, i) => !i ? (!!v ? 1 : 0) : parseInt(v, 16));
+
+      if (value && fullMatch) {
+        if (aOutsideBC(systemId, LIMITS.s.min, LIMITS.s.max)) { errors.systemIdOutOfRange    = systemId; }
+        if (aOutsideBC(xCoord,   LIMITS.x.min, LIMITS.x.max)) { errors.xCoordinateOutOfRange = xCoord; }
+        if (aOutsideBC(yCoord,   LIMITS.y.min, LIMITS.y.max)) { errors.yCoordinateOutOfRange = yCoord; }
+        if (aOutsideBC(zCoord,   LIMITS.z.min, LIMITS.z.max)) { errors.zCoordinateOutOfRange = zCoord; }
+
+        if (Object.keys(errors).length > 1) {
+          errors.invalidGalacticAddress = true;
+        }
+      } else {
+        errors.invalidGalacticAddress = true;
+      }
+    }
+
+    return errors.invalidGalacticAddress ? errors : null;
   }
 
 }
-
-export const galacticAddressValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-  const value: string = control.value;
-  let match: RegExpMatchArray;
-  const errors: ValidationErrors = {invalidGalacticAddress: false};
-
-  if (!value || !(match = value.match(/([0-9A-F]{4}):([0-9A-F]{4}):([0-9A-F]{4}):([0-9A-F]{4})/))) {
-    errors.invalidGalacticAddress = true;
-  } else {
-    const [fullMatch, xCoord, yCoord, zCoord, systemId] = match;
-
-    if (value && fullMatch) {
-      const s = parseInt(systemId, 16);
-      if (s < LIMITS.s.min || s > LIMITS.s.max) {
-        errors.systemIdOutOfRange = systemId;
-      }
-      const x = parseInt(xCoord, 16);
-      if (x < LIMITS.x.min || x > LIMITS.x.max) {
-        errors.xCoordinateOutOfRange = xCoord;
-      }
-      const y = parseInt(yCoord, 16);
-      if (y < LIMITS.y.min || y > LIMITS.y.max) {
-        errors.yCoordinateOutOfRange = yCoord;
-      }
-      const z = parseInt(zCoord, 16);
-      if (z < LIMITS.z.min || z > LIMITS.z.max) {
-        errors.zCoordinateOutOfRange = zCoord;
-      }
-
-      if (Object.keys(errors).length > 1) {
-        errors.invalidGalacticAddress = true;
-      }
-    } else {
-      errors.invalidGalacticAddress = true;
-    }
-  }
-
-  return errors.invalidGalacticAddress ? errors : null;
-};

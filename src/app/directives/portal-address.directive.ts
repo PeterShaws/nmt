@@ -1,5 +1,6 @@
-import { Directive, Injector, HostListener } from '@angular/core';
-import { NG_VALIDATORS, NgControl, Validator, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { Directive, HostListener, InjectionToken, Injector } from '@angular/core';
+import { AbstractControl, NgControl, NG_VALIDATORS, ValidationErrors, Validator, ValidatorFn } from '@angular/forms';
+import { aOutsideBC } from '@helpers/js.helper';
 import { LIMITS } from '@models/limits.model';
 
 @Directive({
@@ -12,59 +13,47 @@ import { LIMITS } from '@models/limits.model';
 })
 export class PortalAddressDirective implements Validator {
 
-  constructor(private injector: Injector) { }
+  constructor(
+    private injector: Injector,
+    private ngControl = new InjectionToken<NgControl>('NgControl')
+  ) { }
 
   @HostListener('input') onInput() {
-    const formatted = (<string>(<NgControl>this.injector.get(NgControl)).value)
+    const formatted = (this.injector.get(this.ngControl).value as string)
       .toUpperCase().replace(/[^0-9A-F]/g, '');
-    (<NgControl>this.injector.get(NgControl)).control.setValue(formatted);
+    this.injector.get(this.ngControl).control.setValue(formatted);
   }
 
   validate(control: AbstractControl): ValidationErrors {
-    return portalAddressValidator(control);
+    return this.portalAddressValidator(control);
+  }
+
+  private portalAddressValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    const value: string = control.value;
+    let match: RegExpMatchArray;
+    const errors: ValidationErrors = { invalidPortalAddress: false };
+
+    if (!value || !(match = value.match(/([0-9A-F]{1})([0-9A-F]{3})([0-9A-F]{2})([0-9A-F]{3})([0-9A-F]{3})/))) {
+      errors.invalidPortalAddress = true;
+    } else {
+      const [fullMatch, portalId, systemId, yCoord, zCoord, xCoord] = match.map((v, i) => !i ? (!!v ? 1 : 0) : parseInt(v, 16));
+
+      if (value && fullMatch) {
+        if (aOutsideBC(portalId, LIMITS.p.min, LIMITS.p.max)) { errors.portalIdOutOfRange    = portalId; }
+        if (aOutsideBC(systemId, LIMITS.s.min, LIMITS.s.max)) { errors.systemIdOutOfRange    = systemId; }
+        if (aOutsideBC(xCoord,   LIMITS.x.min, LIMITS.x.max)) { errors.xCoordinateOutOfRange = xCoord; }
+        if (aOutsideBC(yCoord,   LIMITS.y.min, LIMITS.y.max)) { errors.yCoordinateOutOfRange = yCoord; }
+        if (aOutsideBC(zCoord,   LIMITS.z.min, LIMITS.z.max)) { errors.zCoordinateOutOfRange = zCoord; }
+
+        if (Object.keys(errors).length > 1) {
+          errors.invalidPortalAddress = true;
+        }
+      } else {
+        errors.invalidPortalAddress = true;
+      }
+    }
+
+    return errors.invalidPortalAddress ? errors : null;
   }
 
 }
-
-export const portalAddressValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
-  const value: string = control.value;
-  let match: RegExpMatchArray;
-  const errors: ValidationErrors = {invalidPortalAddress: false};
-
-  if (!value || !(match = value.match(/([0-9A-F]{1})([0-9A-F]{3})([0-9A-F]{2})([0-9A-F]{3})([0-9A-F]{3})/))) {
-    errors.invalidPortalAddress = true;
-  } else {
-    const [fullMatch, portalId, systemId, yCoord, zCoord, xCoord] = match;
-
-    if (value && fullMatch) {
-      const p = parseInt(portalId, 16);
-      if (p < LIMITS.p.min || p > LIMITS.p.max) {
-        errors.portalIdOutOfRange = portalId;
-      }
-      const s = parseInt(systemId, 16);
-      if (s < LIMITS.s.min || s > LIMITS.s.max) {
-        errors.systemIdOutOfRange = systemId;
-      }
-      const x = parseInt(xCoord, 16);
-      if (x < LIMITS.x.min || x > LIMITS.x.max) {
-        errors.xCoordinateOutOfRange = xCoord;
-      }
-      const y = parseInt(yCoord, 16);
-      if (y < LIMITS.y.min || y > LIMITS.y.max) {
-        errors.yCoordinateOutOfRange = yCoord;
-      }
-      const z = parseInt(zCoord, 16);
-      if (z < LIMITS.z.min || z > LIMITS.z.max) {
-        errors.zCoordinateOutOfRange = zCoord;
-      }
-
-      if (Object.keys(errors).length > 1) {
-        errors.invalidPortalAddress = true;
-      }
-    } else {
-      errors.invalidPortalAddress = true;
-    }
-  }
-
-  return errors.invalidPortalAddress ? errors : null;
-};
