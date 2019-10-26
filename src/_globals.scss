@@ -3,49 +3,49 @@ $length-corner-radius: 2px;
 $font-stack: GeoNMS, Arial, Helvetica, sans-serif;
 
 @mixin respond-to($name) {
-    @if $name == small-screen {
-        @media only screen and (max-width: 768px) {
-            @content;
-        }
+  @if $name == small-screen {
+    @media only screen and (max-width: 768px) {
+      @content;
     }
+  }
 
-    @if $name == medium-screen {
-        @media only screen and (min-width: 769px) and (max-width: 1024px) {
-            @content;
-        }
+  @if $name == medium-screen {
+    @media only screen and (min-width: 769px) and (max-width: 1024px) {
+      @content;
     }
+  }
 }
 
 %input-label {
-    padding: $length-gutter 0 0;
-    text: {
-        align: center;
-        transform: uppercase;
-        shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
-    }
-    font: {
-        family: $font-stack;
-        size: 24px;
-    }
-    letter-spacing: 1px;
-    color: white;
+  padding: $length-gutter 0 0;
+  text: {
+    align: center;
+    transform: uppercase;
+    shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
+  }
+  font: {
+    family: $font-stack;
+    size: 24px;
+  }
+  letter-spacing: 1px;
+  color: white;
 }
 
 %input-box {
-    display: block;
-    padding: $length-gutter (2 * $length-gutter);
-    font: {
-        family: $font-stack;
-        size: 20px;
-        weight: 500;
-    }
-    letter-spacing: 1px;
-    text-align: center;
-    border: none {
-        bottom: 3px solid #46545f;
-        radius: 0;
-    }
-    box-shadow: inset 3px 0 0 0 white;
-    background-color: rgba(0, 0, 0, 0.85);
-    color: gainsboro;
+  display: block;
+  padding: $length-gutter (2 * $length-gutter);
+  font: {
+    family: $font-stack;
+    size: 20px;
+    weight: 500;
+  }
+  letter-spacing: 1px;
+  text-align: center;
+  border: none {
+    bottom: 3px solid #46545f;
+    radius: 0;
+  }
+  box-shadow: inset 3px 0 0 0 white;
+  background-color: rgba(0, 0, 0, 0.85);
+  color: gainsboro;
 }
