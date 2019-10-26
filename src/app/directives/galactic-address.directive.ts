@@ -1,4 +1,4 @@
-import { Directive, HostListener, InjectionToken, Injector } from '@angular/core';
+import { Directive, HostListener, Injector, Type } from '@angular/core';
 import { AbstractControl, NgControl, NG_VALIDATORS, ValidationErrors, Validator, ValidatorFn } from '@angular/forms';
 import { aOutsideBC } from '@helpers/js.helper';
 import { LIMITS } from '@models/limits.model';
@@ -13,17 +13,14 @@ import { LIMITS } from '@models/limits.model';
 })
 export class GalacticAddressDirective implements Validator {
 
-  constructor(
-    private injector: Injector,
-    private ngControl = new InjectionToken<NgControl>('NgControl')
-  ) { }
+  constructor(private injector: Injector) { }
 
   @HostListener('input') onInput() {
-    let formatted = (this.injector.get(this.ngControl).value as string)
+    let formatted = (this.injector.get(NgControl as Type<NgControl>).value as string)
       .toUpperCase().replace(/[^0-9A-F]/g, '');
     const matches = formatted.match(/.{1,4}/g);
     formatted = matches ? matches.join(':') : '';
-    this.injector.get(this.ngControl).control.setValue(formatted);
+    this.injector.get(NgControl as Type<NgControl>).control.setValue(formatted);
   }
 
   validate(control: AbstractControl): ValidationErrors {
