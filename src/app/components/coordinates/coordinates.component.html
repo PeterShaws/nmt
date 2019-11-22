@@ -7,23 +7,23 @@
     #gAddress="ngModel" (input)="onInputGalacticAddress(gAddress.value, gAddress.valid, destination.value, destination.valid)">
   <div class="status invalid"
     *ngIf="gAddress.value?.length && gAddress.invalid && (gAddress.touched ||gAddress.dirty)">
-    <div *ngIf="gAddress.errors?.invalidGalacticAddress">
+    <div *ngIf="gAddress.hasError('invalidGalacticAddress')">
       Invalid galactic address.
     </div>
-    <div *ngIf="gAddress.errors?.systemIdOutOfRange">
-      <em>System ID out of range:</em> {{gAddress.errors.systemIdOutOfRange}}.
+    <div *ngIf="gAddress.hasError('systemIdOutOfRange')">
+      <em>System ID out of range:</em> {{gAddress.errors['systemIdOutOfRange']}}.
     </div>
-    <div *ngIf="gAddress.errors?.xCoordinateOutOfRange">
-      <em>X coordinate out of range:</em> {{gAddress.errors.xCoordinateOutOfRange}}.
+    <div *ngIf="gAddress.hasError('xCoordinateOutOfRange')">
+      <em>X coordinate out of range:</em> {{gAddress.errors['xCoordinateOutOfRange']}}.
     </div>
-    <div *ngIf="gAddress.errors?.yCoordinateOutOfRange">
-      <em>Y coordinate out of range:</em> {{gAddress.errors.yCoordinateOutOfRange}}.
+    <div *ngIf="gAddress.hasError('yCoordinateOutOfRange')">
+      <em>Y coordinate out of range:</em> {{gAddress.errors['yCoordinateOutOfRange']}}.
     </div>
-    <div *ngIf="gAddress.errors?.zCoordinateOutOfRange">
-      <em>Z coordinate out of range:</em> {{gAddress.errors.zCoordinateOutOfRange}}.
+    <div *ngIf="gAddress.hasError('zCoordinateOutOfRange')">
+      <em>Z coordinate out of range:</em> {{gAddress.errors['zCoordinateOutOfRange']}}.
     </div>
   </div>
-  
+
   <label for="portal-address">Portal Address</label>
   <input type="text" id="portal-address"
     placeholder="000101001001"
@@ -32,23 +32,23 @@
     #pAddress="ngModel" (input)="onInputPortalAddress(pAddress.value, pAddress.valid)">
   <div class="status invalid"
     *ngIf="pAddress.value?.length && pAddress.invalid && (pAddress.touched || pAddress.dirty)">
-    <div *ngIf="pAddress.errors?.invalidPortalAddress">
+    <div *ngIf="pAddress.hasError('invalidPortalAddress')">
       Invalid portal address.
     </div>
-    <div *ngIf="pAddress.errors?.portalIdOutOfRange">
-      <em>Portal ID out of range:</em> {{pAddress.errors.portalIdOutOfRange}}.
+    <div *ngIf="pAddress.hasError('portalIdOutOfRange')">
+      <em>Portal ID out of range:</em> {{pAddress.errors['portalIdOutOfRange']}}.
     </div>
-    <div *ngIf="pAddress.errors?.systemIdOutOfRange">
-      <em>System ID out of range:</em> {{pAddress.errors.systemIdOutOfRange}}.
+    <div *ngIf="pAddress.hasError('systemIdOutOfRange')">
+      <em>System ID out of range:</em> {{pAddress.errors['systemIdOutOfRange']}}.
     </div>
-    <div *ngIf="pAddress.errors?.xCoordinateOutOfRange">
-      <em>X coordinate out of range:</em> {{pAddress.errors.xCoordinateOutOfRange}}.
+    <div *ngIf="pAddress.hasError('xCoordinateOutOfRange')">
+      <em>X coordinate out of range:</em> {{pAddress.errors['xCoordinateOutOfRange']}}.
     </div>
-    <div *ngIf="pAddress.errors?.yCoordinateOutOfRange">
-      <em>Y coordinate out of range:</em> {{pAddress.errors.yCoordinateOutOfRange}}.
+    <div *ngIf="pAddress.hasError('yCoordinateOutOfRange')">
+      <em>Y coordinate out of range:</em> {{pAddress.errors['yCoordinateOutOfRange']}}.
     </div>
-    <div *ngIf="pAddress.errors?.zCoordinateOutOfRange">
-      <em>Z coordinate out of range:</em> {{pAddress.errors.zCoordinateOutOfRange}}.
+    <div *ngIf="pAddress.hasError('zCoordinateOutOfRange')">
+      <em>Z coordinate out of range:</em> {{pAddress.errors['zCoordinateOutOfRange']}}.
     </div>
   </div>
 
@@ -62,7 +62,7 @@
     *ngIf="destination.value?.length && destination.invalid && (destination.touched || destination.dirty)">
     Invalid planet destination.
   </div>
-  
+
   <label for="portal-glyphs">Portal Glyphs</label>
   <div id="portal-glyphs">{{glyphs}}</div>
 </form>

@@ -38,10 +38,10 @@ export class GalacticAddressDirective implements Validator {
       const [fullMatch, xCoord, yCoord, zCoord, systemId] = match.map((v, i) => !i ? (!!v ? 1 : 0) : parseInt(v, 16));
 
       if (value && fullMatch) {
-        if (aOutsideBC(systemId, LIMITS.s.min, LIMITS.s.max)) { errors.systemIdOutOfRange    = systemId; }
-        if (aOutsideBC(xCoord,   LIMITS.x.min, LIMITS.x.max)) { errors.xCoordinateOutOfRange = xCoord; }
-        if (aOutsideBC(yCoord,   LIMITS.y.min, LIMITS.y.max)) { errors.yCoordinateOutOfRange = yCoord; }
-        if (aOutsideBC(zCoord,   LIMITS.z.min, LIMITS.z.max)) { errors.zCoordinateOutOfRange = zCoord; }
+        if (aOutsideBC(systemId, LIMITS.s.min, LIMITS.s.max)) { errors.systemIdOutOfRange    = systemId.toString(16).toUpperCase(); }
+        if (aOutsideBC(xCoord,   LIMITS.x.min, LIMITS.x.max)) { errors.xCoordinateOutOfRange = xCoord.toString(16).toUpperCase(); }
+        if (aOutsideBC(yCoord,   LIMITS.y.min, LIMITS.y.max)) { errors.yCoordinateOutOfRange = yCoord.toString(16).toUpperCase(); }
+        if (aOutsideBC(zCoord,   LIMITS.z.min, LIMITS.z.max)) { errors.zCoordinateOutOfRange = zCoord.toString(16).toUpperCase(); }
 
         if (Object.keys(errors).length > 1) {
           errors.invalidGalacticAddress = true;
