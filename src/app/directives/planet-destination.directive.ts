@@ -1,4 +1,4 @@
-import { Directive, HostListener } from '@angular/core';
+import { Directive, HostListener, Injector, Type } from '@angular/core';
 import { NgControl } from '@angular/forms';
 
 @Directive({
@@ -6,12 +6,13 @@ import { NgControl } from '@angular/forms';
 })
 export class PlanetDestinationDirective {
 
-  constructor(private ngControl: NgControl) { }
+  constructor(private injector: Injector) { }
 
   @HostListener('input') oninput() {
-    let formatted = (this.ngControl.value as string).replace(/[^0-6]/g, '');
-    if (formatted.length === 0) { formatted = '0'; }
-    this.ngControl.control.setValue(formatted);
+    const ngControl = this.injector.get(NgControl as Type<NgControl>);
+    let formatted = (ngControl.value as string).replace(/[^0-6]/g, '');
+    if (formatted.length === 0) { formatted = ''; }
+    ngControl.control.setValue(formatted);
   }
 
 }

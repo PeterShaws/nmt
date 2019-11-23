@@ -14,7 +14,7 @@ export class TranslatorComponent implements AfterViewInit {
     'Now follow the truth, and be our eyes.',
     'You will leave us here and seek to know what is real: such is your reward.'
   ].join(' ');
-  private languages = {
+  languages = {
     english: { label: 'English', sentence: this.defaultSentence },
     gek:     { label: 'Gek',     sentence: '' },
     korvax:  { label: 'Korvax',  sentence: '' },
