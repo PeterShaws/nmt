@@ -8,15 +8,11 @@ import { CoordinatesService } from '@services/coordinates.service';
 })
 export class CoordinatesComponent {
 
-  address: string;
-  glyphs: string;
-  planet: string;
+  address = '';
+  glyphs = '';
+  planet = '';
 
-  constructor(private coordinatesService: CoordinatesService) {
-    this.address = '';
-    this.glyphs = '';
-    this.planet = '';
-  }
+  constructor(private coordinatesService: CoordinatesService) { }
 
   onInputGalacticAddress(
     newAddress: string,

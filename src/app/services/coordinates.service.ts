@@ -101,7 +101,7 @@ export class CoordinatesService {
    */
   convertPortalAddress(address: string): string {
     // tslint:disable-next-line:prefer-const
-    let [match, systemId, yCoord, zCoord, xCoord] = address.match(/[0-9A-F]{1}([0-9A-F]{3})([0-9A-F]{2})([0-9A-F]{3})([0-9A-F]{3})/);
+    let [, systemId, yCoord, zCoord, xCoord] = address.match(/[0-9A-F]{1}([0-9A-F]{3})([0-9A-F]{2})([0-9A-F]{3})([0-9A-F]{3})/);
 
     const center = (min: number, max: number): number => {
       return Math.floor((max - min) / 2);

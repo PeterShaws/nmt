@@ -10,9 +10,6 @@
     <div *ngIf="gAddress.hasError('invalidGalacticAddress')">
       Invalid galactic address.
     </div>
-    <div *ngIf="gAddress.hasError('systemIdOutOfRange')">
-      <em>System ID out of range:</em> {{gAddress.errors['systemIdOutOfRange']}}.
-    </div>
     <div *ngIf="gAddress.hasError('xCoordinateOutOfRange')">
       <em>X coordinate out of range:</em> {{gAddress.errors['xCoordinateOutOfRange']}}.
     </div>
@@ -21,6 +18,9 @@
     </div>
     <div *ngIf="gAddress.hasError('zCoordinateOutOfRange')">
       <em>Z coordinate out of range:</em> {{gAddress.errors['zCoordinateOutOfRange']}}.
+    </div>
+    <div *ngIf="gAddress.hasError('systemIdOutOfRange')">
+      <em>System ID out of range:</em> {{gAddress.errors['systemIdOutOfRange']}}.
     </div>
   </div>
 
